@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>TLQM AIO · Foundation</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <script defer src="/app.js"></script>
+  </head>
+  <body>
+    <main>
+      <header>
+        <a class="brand" href="/">TLQM <strong>AIO</strong></a
+        ><span class="tag">LOCAL · DỮ LIỆU GIẢ LẬP</span>
+      </header>
+      <section class="hero">
+        <p class="eyebrow">NỀN TẢNG DÙNG CHUNG</p>
+        <h1>Một định danh.<br />Nhiều ứng dụng.</h1>
+        <p class="intro">
+          Kiểm chứng đăng nhập chung, cơ cấu tổ chức và quyền truy cập của TLQM AIO.
+        </p>
+        <div class="actions">
+          <a class="button primary" href="/auth/login" id="login">Đăng nhập SSO</a>
+          <a class="button" id="second-app" href="http://127.0.0.1:4101/">Mở ứng dụng thử B</a>
+          <button class="button" id="refresh">Kiểm tra phiên</button>
+        </div>
+      </section>
+      <div class="grid">
+        <section class="card">
+          <h2>Danh tính và phiên</h2>
+          <p id="identity-status" role="status">Đang kiểm tra…</p>
+          <dl id="identity"></dl>
+          <div class="actions">
+            <button class="button" id="logout" hidden>Đăng xuất ứng dụng</button
+            ><button class="button" id="global-logout" hidden>Đăng xuất SSO</button>
+          </div>
+        </section>
+        <section class="card">
+          <h2>Ứng dụng được cấp</h2>
+          <p class="muted">Quyền được kiểm tra lại ở backend.</p>
+          <ul id="apps"></ul>
+        </section>
+        <section class="card">
+          <h2>Cơ cấu tổ chức</h2>
+          <p class="muted">Danh mục trong phạm vi tài khoản.</p>
+          <ul id="directory"></ul>
+        </section>
+        <section class="card">
+          <h2>Trạng thái triển khai</h2>
+          <ul class="status-list">
+            <li>SSO / OIDC <span>Đang thử local</span></li>
+            <li>Directory / Access / Audit <span>Bộ khung API</span></li>
+            <li>Form Builder <span>Giai đoạn tiếp</span></li>
+            <li>Tích hợp LMS <span>Giai đoạn tiếp</span></li>
+          </ul>
+        </section>
+      </div>
+      <footer>
+        Trang kiểm chứng nền tảng. Dùng tài khoản giả lập trong cấu hình local; không nhập dữ liệu
+        công ty.
+      </footer>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,41 @@
+{
+  "name": "tlqm-aio",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24 <25"
+  },
+  "scripts": {
+    "local:prepare": "node scripts/local.mjs prepare",
+    "local:up": "node scripts/local.mjs up",
+    "local:stop": "node scripts/local.mjs stop",
+    "db:setup": "tsx scripts/database.ts",
+    "dev": "tsx watch scripts/dev.ts",
+    "start": "node dist/scripts/dev.js",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc",
+    "test": "tsx --test --test-concurrency=1 tests/*.test.ts",
+    "test:e2e": "tsx scripts/e2e.ts",
+    "format": "prettier --write src scripts tests public package.json tsconfig.json .prettierrc.json",
+    "format:check": "prettier --check src scripts tests public package.json tsconfig.json .prettierrc.json",
+    "check": "npm run format:check && npm run typecheck && npm test && npm run build"
+  },
+  "dependencies": {
+    "@fastify/cookie": "11.1.5",
+    "@fastify/helmet": "13.2.0",
+    "@fastify/rate-limit": "11.2.2",
+    "fastify": "5.12.8",
+    "jose": "6.2.16",
+    "openid-client": "6.8.9",
+    "pg": "8.23.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.65.0",
+    "@types/node": "^24.0.0",
+    "@types/pg": "8.23.1",
+    "prettier": "3.9.10",
+    "tsx": "4.23.15",
+    "typescript": "7.0.2"
+  }
+}

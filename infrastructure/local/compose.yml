@@ -1,0 +1,54 @@
+name: tlqm-aio-local
+services:
+  identity-db:
+    image: postgres:17.7-alpine
+    environment:
+      POSTGRES_DB: aio_identity
+      POSTGRES_USER: aio_identity
+      POSTGRES_PASSWORD: ${IDENTITY_DB_PASSWORD:?Run local:prepare}
+    volumes:
+      - identity-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U aio_identity -d aio_identity"]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+  foundation-db:
+    image: postgres:17.7-alpine
+    environment:
+      POSTGRES_DB: aio_foundation
+      POSTGRES_USER: aio_foundation
+      POSTGRES_PASSWORD: ${FOUNDATION_DB_PASSWORD:?Run local:prepare}
+    ports:
+      - "127.0.0.1:5438:5432"
+    volumes:
+      - foundation-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U aio_foundation -d aio_foundation"]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.8.2
+    command: ["start-dev", "--import-realm"]
+    depends_on:
+      identity-db:
+        condition: service_healthy
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://identity-db:5432/aio_identity
+      KC_DB_USERNAME: aio_identity
+      KC_DB_PASSWORD: ${IDENTITY_DB_PASSWORD:?Run local:prepare}
+      KC_BOOTSTRAP_ADMIN_USERNAME: aio-local-admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:?Run local:prepare}
+      KC_HOSTNAME: http://127.0.0.1:8180
+      KC_HEALTH_ENABLED: "true"
+      KC_HTTP_ACCESS_LOG_ENABLED: "false"
+    ports:
+      - "127.0.0.1:8180:8080"
+    volumes:
+      - ../../.local/realm:/opt/keycloak/data/import:ro
+    mem_limit: 2g
+volumes:
+  identity-data:
+  foundation-data:
