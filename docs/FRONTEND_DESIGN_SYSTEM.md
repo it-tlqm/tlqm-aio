@@ -1,6 +1,6 @@
 # Frontend TLQM AIO — shadcn/ui và màu TLQM
 
-Ngày: 09/11/2026. Trạng thái: **ưu tiên frontend và palette đã được người dùng xác nhận; chưa áp dụng vào trang thử hiện tại**.
+Ngày: 10/11/2026. Trạng thái: **đã áp dụng vào frontend React/shadcn và theme đăng nhập SSO trong worktree local feat/foundation-mvp, chưa commit**. E2E đã kiểm chứng các thông số dưới đây trong phạm vi ghi cuối tài liệu.
 
 ## Công nghệ và nguồn chuẩn
 
@@ -29,6 +29,7 @@ DS-02 đang dùng nền app trắng, text #17202E, nav accent #326DD8 và ưu ti
 | Navigation | nav-active-bg | #EAF6EF |
 | Selection | item-selected | #EAF1FD |
 | Border | border | #E3E8EF |
+| Control | input border | #8490A1; chỉ cho đường bao control |
 | Text | text-primary | #1F2937 |
 | Text | text-secondary | #475467 |
 | Text | text-muted | #667085 |
@@ -56,7 +57,7 @@ Radius sm 8px, md 10px, lg 14px. Khoảng cách theo bội 4px. Vùng bấm tố
 | accent / accent-foreground | nav-active-bg / brand-navy |
 | destructive / destructive-foreground nếu component sử dụng | danger / #FFFFFF |
 | border | border |
-| input | Theo quy tắc nhận diện control bên dưới; không dùng viền mờ làm dấu hiệu duy nhất |
+| input | #8490A1 trên nền surface trắng; không dùng border trang trí làm dấu hiệu duy nhất |
 | ring | brand-green |
 | sidebar / sidebar-foreground | sidebar-bg / brand-navy |
 | sidebar-primary / sidebar-primary-foreground | action-primary / #FFFFFF |
@@ -81,10 +82,32 @@ Các tỷ lệ dưới đây được tính từ màu sRGB phẳng, chưa gồm 
 | #B42318 / #FEF3F2 — danger | 6,05:1 |
 | #1D4ED8 / #EFF6FF — info | 6,16:1 |
 | #E3E8EF / #FFFFFF — border | 1,23:1 |
+| #8490A1 / #FFFFFF — control border | 3,24:1 |
+| #8490A1 / #F5F8FA — control border | 3,04:1 |
 
 Giữ #087C3C cho CTA chữ trắng cỡ thường; brand-green dành cho điểm nhấn/focus và trường hợp có tương phản phù hợp. Không gọi toàn bộ giao diện là đạt WCAG AA chỉ vì màu CTA đạt một phép kiểm tra.
 
-Border #E3E8EF phù hợp đường phân cách trang trí. Với control cần đường bao để nhận diện, dùng biến thể control-border rõ hơn từ palette, ví dụ text-muted, và kiểm tra trên nền thực tế. Focus ring phải nhìn thấy; trạng thái lỗi/thành công có text/icon ngoài màu.
+Border #E3E8EF phù hợp đường phân cách trang trí. Control dùng biến thể #8490A1 để giữ đường bao nhận diện trên nền trắng/canvas mà không dùng viền tối như chữ. Focus ring phải nhìn thấy; trạng thái lỗi/thành công có text/icon ngoài màu.
+
+## Điều chỉnh component dùng chung ngày 10/11/2026
+
+AIO tiếp tục dùng component shadcn/Radix trong frontend/src/components/ui. Loại bỏ các override toàn cục font shorthand, min-size trên mọi button và focus outline ngoài CSS layer: chúng làm chữ/control mất scale riêng, checkbox thành ô 44px và tạo hai vòng focus. Kích thước, padding, màu hover/focus/disabled được khai báo tại Button, Input, Select, Textarea, Checkbox, Tabs, Card, Dialog, Badge, Table và menu.
+
+Button/input/select giữ vùng thao tác tối thiểu 44px. Checkbox có phần hiển thị 20px trong vùng bấm 44px, cả trạng thái checked/indeterminate và focus bàn phím. Tabs tự cao theo nội dung khi xuống dòng, không áp chiều cao cố định thấp hơn trigger; bỏ các lớp vá rời ở Foundation và Quy trình. Dialog rộng và có padding thống nhất; input nền trắng, bảng có header và khoảng cách cột rõ ràng. Palette thương hiệu, logo, Be Vietnam Pro, Radix semantics và CSP nonce được giữ.
+
+Canvas Quy trình theo dõi kích thước vùng vẽ để fit lại khi chuyển desktop/mobile, không ghi lại vị trí bước hay thay đổi cấu hình quy trình từ thao tác resize. Khi kiểm tra hình ảnh, chờ tải dữ liệu và animation kết thúc; ảnh đang vào dialog hoặc còn skeleton không dùng làm bằng chứng bố cục cuối.
+
+### Kết quả kiểm chứng bản sửa component
+
+Kiểm chứng ngày 10/11/2026 tại D:/thanhnx/TLQM-AIO, nhánh feat/foundation-mvp, baseline HEAD abea705b0937fe164fa9c983700089bec88c82ba; worktree dirty. Các thay đổi frontend, scripts và tài liệu chưa commit nên không mô tả ảnh/test là kết quả của riêng HEAD.
+
+- `npm run check`: pass, 103 unit/integration tests, TypeScript, format và build. `npm run test:e2e`: pass cả ba suite Foundation SSO, identity và admin UI.
+- `test:workflows`, `test:workflows-assignments`, `test:forms-ui`, `test:lms`: pass tuần tự trên dữ liệu giả lập. Những lượt thất bại trước do kiểm tra ngay lúc Select đang đóng vẫn giữ trong evidence lịch sử. Helper mới chờ listbox đóng, xác nhận giá trị được chọn; checkbox dùng role cụ thể và kiểm trạng thái checked. Không tắt animation, bỏ assertion hay giảm kiểm tra auth/quyền để đạt pass.
+- Kiểm tra hình ảnh riêng trên bản build cuối: 8 trạng thái desktop/mobile bằng axe, không có violation; giữ các mục incomplete để đánh giá thủ công. Đã xem trực tiếp ảnh bảng, dialog, thư viện mẫu, thông tin quy trình và canvas ở 1440/390/320px. Đây không phải chứng nhận WCAG đầy đủ.
+- Checkbox đo được vùng bấm 44×44px, ô hiển thị 20×20px, màu checked #087C3C; kiểm Space bật/tắt và focus xanh #0A9444. Dialog giữ focus bên trong, Escape đóng và trả focus về nút mở. Select mở/đóng bằng bàn phím và trả focus đúng control.
+- Regression Quy trình kiểm đủ sáu bước của mẫu nằm trong canvas và tâm sơ đồ khớp tâm khung khi chuyển 1440 → 390 → 320 → 1440; không chỉ kiểm trang hết tràn ngang. Tabs xuống dòng nằm trong khung riêng.
+
+Evidence ignored trong `.local/evidence`: `shared-ui-regression.json`, `shared-ui-regression-followup.json`, `shared-ui-forms-lms-followup.json`, `shared-ui-workflow-final.json`, `shared-ui-visual-review.json`, ảnh `shared-ui-*.png`; snapshot hash source/evidence `shared-ui-revision.json`. Các snapshot/ảnh cũ là lịch sử, không đại diện bản sửa này. Kiểm tra hình ảnh không ghi màn hình mật khẩu, OTP hoặc QR enrollment.
 
 ## Quy chuẩn giao diện Foundation
 
@@ -95,11 +118,23 @@ Border #E3E8EF phù hợp đường phân cách trang trí. Với control cần 
 - Table responsive hoặc có vùng cuộn có chủ đích; không tràn toàn trang trên mobile.
 - Label luôn hiện, lỗi đặt cạnh trường, dialog có focus trap/restore focus và thao tác bàn phím.
 - Màn hình phải có loading, empty, error, no-access; quyền backend vẫn quyết định thao tác được phép.
-- Chỉ dùng logo chính thức đã được cung cấp; trước đó dùng wordmark TLQM AIO dạng chữ.
+- Dùng [logo chính thức TLQM 2026](../brand/tlqm-2026/README.md) từ D:/TLQM/Logo, được người dùng cung cấp ngày 10/11/2026. Emblem màu trên nền sáng, phiên bản trắng chính thức trên nền navy; dùng component Brand chung và favicon. Không thay logo bằng icon nghiệp vụ hoặc tự đổi màu logo.
 - Với identity/session, giữ cơ chế server session/BFF và CSRF; thay giao diện không làm yếu luồng SSO.
+
+## Trang đăng nhập SSO
+
+Từ 10/11/2026, realm aio-local dùng theme TLQM kế thừa Keycloak v2 với cùng palette, font nội bộ, light mode và kích thước control. Login/OTP/lỗi có kiểm tra màu thực tế, bàn phím và responsive 1440/390/320; 7 axe scans không có violations. Đây là theme Keycloak dùng chung design tokens, không phải component React/shadcn. [Cấu hình, rollback và phạm vi nghiệm thu](SSO_THEME.md).
 
 ## Nghiệm thu khi triển khai frontend
 
 Kiểm tra desktop 1440px, mobile 390px và thao tác keyboard. Chụp ảnh từ dữ liệu giả lập sau khi đọc computed colors/font/radius của component thật; kiểm tra primary/hover/focus, badges, bảng, modal và form invalid.
 
-Hiện public/index.html và public/styles.css vẫn là trang kiểm chứng SSO cũ. Tài liệu này xác định chuẩn cho lần xây frontend tiếp theo, không tuyên bố trang hiện tại đã chuyển sang shadcn.
+Frontend hiện nằm trong frontend/: React/TypeScript/Vite/Tailwind v4, shadcn radix-nova (component sinh bằng CLI), Be Vietnam Pro phục vụ từ asset local và license kèm theo. Token tập trung ở frontend/src/index.css. Fastify phục vụ frontend/dist sau build; public/ chỉ còn fallback cũ.
+
+E2E đã kiểm tra 1440px/390px, font loaded, CTA/canvas/radius/44px, dialog focus trap/restore, form invalid, Select quan hệ và checkbox permission. CSP giữ nonce, không nới unsafe-inline. Suite admin-ui đã quét 17 trạng thái bằng axe-core với tags WCAG A/AA, không exclude/disable rule: 0 violation; một số kiểm tra modal cần đánh giá thủ công (focus/contrast đã được kiểm tra bổ sung). Đây không phải chứng nhận WCAG đầy đủ.
+
+Qua kiểm tra đã sửa hai lỗi thực tế: tab chưa chọn dùng text-foreground/60 chỉ đạt 3,95:1 nên đổi sang token text-secondary; nội dung của tabs được đặt trong TabsContent đúng để aria-controls trỏ đến panel tồn tại. Giữ palette người dùng, không đổi ngưỡng test hoặc bỏ luật tương phản để pass. Ảnh audit desktop/mobile và identity confirmation đã được xem trực tiếp.
+
+LMS sandbox ở frontend/src/lms dùng cùng components/tokens và chunk riêng. E2E kiểm font loaded, canvas #F5F8FA, CTA #087C3C, button tối thiểu 44px, không tràn toàn trang 1440/390px và CSP. Năm trạng thái learner desktop/mobile, reviewer, admin và unmapped denial được quét axe: zero violation, giữ các incomplete checks trong artifact. Ảnh learner desktop/mobile và admin đã được xem; trạng thái sandbox và dữ liệu giả lập ghi ngay đầu trang. [Nghiệm thu LMS](LMS_ACCEPTANCE.md).
+
+Mốc học tập/chứng nhận ngày 10/11/2026 bổ sung catalogue/player/quiz/result, chứng nhận TLQM và xếp hạng đơn vị trên cùng shadcn/tokens. `test:lms-learner` bản cuối 06:32Z có 10 axe scans không violation, kiểm dialog Escape/restore focus và mobile. Đã xem ảnh UI/PNG xuất/PDF render; bản in có CSS riêng bỏ dịch chuyển của dialog, không in màn nền. [Hướng dẫn học tập và phạm vi bằng chứng](LMS_LEARNING.md).

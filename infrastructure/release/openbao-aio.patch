@@ -1,0 +1,269 @@
+diff --git a/go.mod b/go.mod
+index d28e6fc..0db8e75 100644
+--- a/go.mod
++++ b/go.mod
+@@ -35,7 +35,7 @@ require (
+ 	github.com/duosecurity/duo_api_golang v0.2.0
+ 	github.com/evanphx/json-patch/v5 v5.9.11
+ 	github.com/fatih/color v1.19.0
+-	github.com/go-jose/go-jose/v4 v4.1.4
++	github.com/go-jose/go-jose/v4 v4.1.9
+ 	github.com/go-sql-driver/mysql v1.10.0
+ 	github.com/go-test/deep v1.1.1
+ 	github.com/go-viper/mapstructure/v2 v2.5.0
+@@ -129,7 +129,7 @@ require (
+ 	go.uber.org/zap v1.28.0
+ 	golang.org/x/crypto v0.58.0
+ 	golang.org/x/exp v0.0.0-20260112195511-716be5621a96
+-	golang.org/x/net v0.61.0
++	golang.org/x/net v0.62.0
+ 	golang.org/x/oauth2 v0.36.0
+ 	golang.org/x/sync v0.24.0
+ 	golang.org/x/sys v0.49.0
+diff --git a/go.sum b/go.sum
+index cdb4898..db1eca7 100644
+--- a/go.sum
++++ b/go.sum
+@@ -242,6 +242,8 @@ github.com/go-jose/go-jose/v3 v3.0.5 h1:BLLJWbC4nMZOfuPVxoZIxeYsn6Nl2r1fITaJ78UQ
+ github.com/go-jose/go-jose/v3 v3.0.5/go.mod h1:5b+7YgP7ZICgJDBdfjZaIt+H/9L9T/YQrVfLAMboGkQ=
+ github.com/go-jose/go-jose/v4 v4.1.4 h1:moDMcTHmvE6Groj34emNPLs/qtYXRVcd6S7NHbHz3kA=
+ github.com/go-jose/go-jose/v4 v4.1.4/go.mod h1:x4oUasVrzR7071A4TnHLGSPpNOm2a21K9Kf04k1rs08=
++github.com/go-jose/go-jose/v4 v4.1.9 h1:pKfeQkig1NmgK4hJrZYXLEYURXfoJB61Larw0uIW4gY=
++github.com/go-jose/go-jose/v4 v4.1.9/go.mod h1:x4oUasVrzR7071A4TnHLGSPpNOm2a21K9Kf04k1rs08=
+ github.com/go-kit/kit v0.8.0/go.mod h1:xBxKIO96dXMWWy0MnWVtmwkA9/13aqxPnvrjFYMA2as=
+ github.com/go-kit/kit v0.9.0/go.mod h1:xBxKIO96dXMWWy0MnWVtmwkA9/13aqxPnvrjFYMA2as=
+ github.com/go-ldap/ldap/v3 v3.4.14 h1:D6PYdEgsaVzsXyr6w/yDC06Ria4uUhWm+Rb+er8lfAs=
+@@ -886,6 +888,8 @@ golang.org/x/net v0.6.0/go.mod h1:2Tu9+aMcznHK/AK1HMvgo6xiTLG5rD5rZLDS+rp2Bjs=
+ golang.org/x/net v0.10.0/go.mod h1:0qNGK6F8kojg2nk9dLZ2mShWaEBan6FAoqfSigmmuDg=
+ golang.org/x/net v0.61.0 h1:RR+6j/BTBCrggOLugxa+66R8FvoN6MHlzDlZIbN9YFw=
+ golang.org/x/net v0.61.0/go.mod h1:WgDCOTH8iwtB66T4/GfI94AHo/hhdb7Hah9NDseQfiI=
++golang.org/x/net v0.62.0 h1:18ELalfM5+XNRwzM2nYqXsZQ9ByS1uhj2O/U7+5jqRY=
++golang.org/x/net v0.62.0/go.mod h1:WgDCOTH8iwtB66T4/GfI94AHo/hhdb7Hah9NDseQfiI=
+ golang.org/x/oauth2 v0.0.0-20180821212333-d2e6202438be/go.mod h1:N/0e6XlmueqKjAGxoOufVs8QHGRruUQn6yWY3a++T0U=
+ golang.org/x/oauth2 v0.0.0-20190226205417-e64efc72b421/go.mod h1:gOpvHmFTYa4IltrdGE7lF6nIHvwfUNPOp7c8zoXwtLw=
+ golang.org/x/oauth2 v0.36.0 h1:peZ/1z27fi9hUOFCAZaHyrpWG5lwe0RJEEEeH0ThlIs=
+diff --git a/internal/command/commands.go b/internal/command/commands.go
+index 82dd82c..0786ef8 100644
+--- a/internal/command/commands.go
++++ b/internal/command/commands.go
+@@ -28,8 +28,7 @@ import (
+ 	auditSyslog "github.com/openbao/openbao/v2/internal/builtin/audit/syslog"
+ 
+ 	credCert "github.com/openbao/openbao/v2/internal/builtin/credential/cert"
+-	credOIDC "github.com/openbao/openbao/v2/internal/builtin/credential/jwt"
+-	credKube "github.com/openbao/openbao/v2/internal/builtin/credential/kubernetes"
++
+ 	credToken "github.com/openbao/openbao/v2/internal/builtin/credential/token"
+ 	credUserpass "github.com/openbao/openbao/v2/internal/builtin/credential/userpass"
+ 
+@@ -159,10 +158,10 @@ var (
+ 
+ func initCommands(ui, serverCmdUi cli.Ui, runOpts *RunOptions) map[string]cli.CommandFactory {
+ 	loginHandlers := map[string]LoginHandler{
+-		"cert":       &credCert.CLIHandler{},
+-		"oidc":       &credOIDC.CLIHandler{},
+-		"token":      &credToken.CLIHandler{},
+-		"kubernetes": &credKube.CLIHandler{},
++		"cert": &credCert.CLIHandler{},
++
++		"token": &credToken.CLIHandler{},
++
+ 		"userpass": &credUserpass.CLIHandler{
+ 			DefaultMount: "userpass",
+ 		},
+diff --git a/internal/helper/builtinplugins/registry.go b/internal/helper/builtinplugins/registry.go
+index 94af1a8..48fc1ab 100644
+--- a/internal/helper/builtinplugins/registry.go
++++ b/internal/helper/builtinplugins/registry.go
+@@ -10,8 +10,7 @@ import (
+ 	"github.com/openbao/openbao/sdk/v2/logical"
+ 	credAppRole "github.com/openbao/openbao/v2/internal/builtin/credential/approle"
+ 	credCert "github.com/openbao/openbao/v2/internal/builtin/credential/cert"
+-	credJWT "github.com/openbao/openbao/v2/internal/builtin/credential/jwt"
+-	credKube "github.com/openbao/openbao/v2/internal/builtin/credential/kubernetes"
++
+ 	credUserpass "github.com/openbao/openbao/v2/internal/builtin/credential/userpass"
+ 	dbCass "github.com/openbao/openbao/v2/internal/builtin/database/cassandra"
+ 	dbInflux "github.com/openbao/openbao/v2/internal/builtin/database/influxdb"
+@@ -56,12 +55,10 @@ type logicalBackend struct {
+ func newRegistry() *registry {
+ 	reg := &registry{
+ 		credentialBackends: map[string]credentialBackend{
+-			"approle":    {Factory: credAppRole.Factory},
+-			"cert":       {Factory: credCert.Factory},
+-			"jwt":        {Factory: credJWT.Factory},
+-			"kubernetes": {Factory: credKube.Factory},
+-			"oidc":       {Factory: credJWT.Factory},
+-			"userpass":   {Factory: credUserpass.Factory},
++			"approle": {Factory: credAppRole.Factory},
++			"cert":    {Factory: credCert.Factory},
++
++			"userpass": {Factory: credUserpass.Factory},
+ 		},
+ 		databasePlugins: map[string]databasePlugin{
+ 			// These four plugins all use the same mysql implementation but with
+diff --git a/internal/vault/identity/mfa.go b/internal/vault/identity/mfa.go
+index b239747..6233182 100644
+--- a/internal/vault/identity/mfa.go
++++ b/internal/vault/identity/mfa.go
+@@ -289,7 +289,7 @@ func (i *IdentityStore) handleMFAMethodTOTPUpdate(ctx context.Context, req *logi
+ }
+ 
+ func (i *IdentityStore) handleMFAMethodOKTAUpdate(ctx context.Context, req *logical.Request, d *framework.FieldData) (*logical.Response, error) {
+-	return i.handleMFAMethodUpdateCommon(ctx, req, d, MfaMethodTypeOkta)
++	return logical.ErrorResponse("Okta MFA is unavailable in this AIO build"), nil
+ }
+ 
+ func (i *IdentityStore) handleMFAMethodDuoUpdate(ctx context.Context, req *logical.Request, d *framework.FieldData) (*logical.Response, error) {
+diff --git a/internal/vault/login_mfa.go b/internal/vault/login_mfa.go
+index f64d1ad..3c7ab39 100644
+--- a/internal/vault/login_mfa.go
++++ b/internal/vault/login_mfa.go
+@@ -26,8 +26,6 @@ import (
+ 	"github.com/hashicorp/go-hclog"
+ 	"github.com/hashicorp/go-memdb"
+ 	"github.com/hashicorp/go-multierror"
+-	"github.com/okta/okta-sdk-golang/v2/okta"
+-	"github.com/okta/okta-sdk-golang/v2/okta/query"
+ 	"github.com/openbao/openbao/sdk/v2/framework"
+ 	"github.com/openbao/openbao/sdk/v2/helper/identitytpl"
+ 	"github.com/openbao/openbao/sdk/v2/helper/jsonutil"
+@@ -1201,136 +1199,8 @@ func (c *Core) validateDuo(ctx context.Context, mfaFactors *MFAFactor, mConfig *
+ 	}
+ }
+ 
+-func (c *Core) validateOkta(ctx context.Context, mConfig *mfa.Config, username string) error {
+-	oktaConfig := mConfig.GetOktaConfig()
+-	if oktaConfig == nil {
+-		return fmt.Errorf("failed to get Okta configuration for method %q", mConfig.Name)
+-	}
+-
+-	baseURL := oktaConfig.BaseURL
+-	if baseURL == "" {
+-		baseURL = "okta.com"
+-	}
+-	orgURL, err := url.Parse(fmt.Sprintf("https://%s.%s", oktaConfig.OrgName, baseURL))
+-	if err != nil {
+-		return err
+-	}
+-
+-	ctx, client, err := okta.NewClient(
+-		ctx,
+-		okta.WithToken(oktaConfig.APIToken),
+-		okta.WithOrgUrl(orgURL.String()),
+-		// Do not use cache or polling MFA will not refresh
+-		okta.WithCache(false),
+-	)
+-	if err != nil {
+-		return fmt.Errorf("error creating client: %s", err)
+-	}
+-
+-	filterField := "profile.login"
+-	if oktaConfig.PrimaryEmail {
+-		filterField = "profile.email"
+-	}
+-	filterQuery := fmt.Sprintf("%s eq %q", filterField, username)
+-	filter := query.NewQueryParams(query.WithFilter(filterQuery))
+-
+-	users, _, err := client.User.ListUsers(ctx, filter)
+-	if err != nil {
+-		return err
+-	}
+-	switch {
+-	case len(users) == 0:
+-		return errors.New("no users found for e-mail address")
+-	case len(users) > 1:
+-		return errors.New("more than one user found for e-mail address")
+-	}
+-
+-	user := users[0]
+-
+-	factors, _, err := client.UserFactor.ListFactors(ctx, user.Id)
+-	if err != nil {
+-		return err
+-	}
+-
+-	if len(factors) == 0 {
+-		return errors.New("no MFA factors found for user")
+-	}
+-
+-	var factorFound bool
+-	var userFactor *okta.UserFactor
+-	for _, factor := range factors {
+-		if factor.IsUserFactorInstance() {
+-			userFactor = factor.(*okta.UserFactor)
+-			if userFactor.FactorType == "push" {
+-				factorFound = true
+-				break
+-			}
+-		}
+-	}
+-
+-	if !factorFound {
+-		return errors.New("no push-type MFA factor found for user")
+-	}
+-
+-	result, _, err := client.UserFactor.VerifyFactor(ctx, user.Id, userFactor.Id, okta.VerifyFactorRequest{}, userFactor, nil)
+-	if err != nil {
+-		return err
+-	}
+-
+-	if result.FactorResult != "WAITING" {
+-		return fmt.Errorf("expected WAITING status for push status, got %q", result.FactorResult)
+-	}
+-
+-	// Parse links to get polling link
+-	type linksObj struct {
+-		Poll struct {
+-			Href string `mapstructure:"href"`
+-		} `mapstructure:"poll"`
+-	}
+-	links := new(linksObj)
+-	if err := mapstructure.WeakDecode(result.Links, links); err != nil {
+-		return err
+-	}
+-	// Strip the org URL from the fully qualified poll URL
+-	url, err := url.Parse(strings.Replace(links.Poll.Href, orgURL.String(), "", 1))
+-	if err != nil {
+-		return err
+-	}
+-
+-	for {
+-		// Okta provides an SDK method `GetFactorTransactionStatus` but does not provide the transaction id in
+-		// the VerifyFactor response. This code effectively reimplements that method.
+-		rq := client.CloneRequestExecutor()
+-		req, err := rq.WithAccept("application/json").WithContentType("application/json").NewRequest("GET", url.String(), nil)
+-		if err != nil {
+-			return err
+-		}
+-		var result *okta.VerifyUserFactorResponse
+-		_, err = rq.Do(ctx, req, &result)
+-		if err != nil {
+-			return err
+-		}
+-
+-		switch result.FactorResult {
+-		case "WAITING":
+-		case "SUCCESS":
+-			return nil
+-		case "REJECTED":
+-			return errors.New("push verification explicitly rejected")
+-		case "TIMEOUT":
+-			return errors.New("push verification timed out")
+-		default:
+-			return errors.New("unknown status code")
+-		}
+-		timer := time.NewTimer(time.Second)
+-
+-		select {
+-		case <-ctx.Done():
+-			timer.Stop()
+-			return errors.New("push verification operation canceled")
+-		case <-timer.C:
+-		}
+-	}
++func (c *Core) validateOkta(_ context.Context, _ *mfa.Config, _ string) error {
++	return errors.New("Okta MFA is unavailable in this AIO build")
+ }
+ 
+ func (c *Core) validatePingID(ctx context.Context, mConfig *mfa.Config, username string) error {

@@ -1,0 +1,93 @@
+{
+  "operation": "Trim fully transparent outer canvas, preserve aspect ratio, resize PNG for web. No recoloring or redrawing. Clear space is provided by UI layout.",
+  "destinations": [
+    "frontend/src/assets/brand",
+    "infrastructure/keycloak/themes/tlqm/login/resources/img/brand"
+  ],
+  "assets": [
+    {
+      "name": "emblem-color",
+      "source": "brand/tlqm-2026/source/png/TA LUNG_2026_logo.png",
+      "sourceSha256": "66cc04d83053823488e4c98c4506dffe3054bb325cb83dd0196c0e5326e3c543",
+      "alphaBounds": {
+        "left": 173,
+        "top": 507,
+        "width": 1861,
+        "height": 1485
+      },
+      "outputSha256": "d6a4ab30a377cdc894a124e32548525b37457f213fc7e8bf5d2bb8688966c7ca",
+      "width": 256
+    },
+    {
+      "name": "favicon",
+      "source": "brand/tlqm-2026/source/png/TA LUNG_2026_logo.png",
+      "outputSha256": "bc893c3057b2f154fd9b680cf24ebe12d7be0febaa5fc2aff295a4b1c124449b",
+      "width": 64
+    },
+    {
+      "name": "emblem-white",
+      "source": "brand/tlqm-2026/source/png/TA LUNG_2026_logo-13.png",
+      "sourceSha256": "04befacbf4914eff99dbcdf43ab0d1ebc34a395b5e6bdb6df0d5b34473ad92b3",
+      "alphaBounds": {
+        "left": 173,
+        "top": 507,
+        "width": 1861,
+        "height": 1485
+      },
+      "outputSha256": "890fb21468366737f728420f89a3132c769a1624bf7babcc4e22a3d73f98a589",
+      "width": 256
+    },
+    {
+      "name": "lockup-color",
+      "source": "brand/tlqm-2026/source/png/TA LUNG_2026_logo-01.png",
+      "sourceSha256": "3dd7d19c9f83dcd916595d5ad5dc084d3a8bc49649687bd22d9b7b81f5b01964",
+      "alphaBounds": {
+        "left": 787,
+        "top": 320,
+        "width": 2744,
+        "height": 1818
+      },
+      "outputSha256": "6fe860ad7eac822cdddad1e6a0b5e25c6c5b3547d0a11a70a948a478dc70568d",
+      "width": 720
+    },
+    {
+      "name": "lockup-white",
+      "source": "brand/tlqm-2026/source/png/TA LUNG_2026_logo-05.png",
+      "sourceSha256": "1dd2271ec28c8592dcd456da3b17e8a7f71df8fad00a046929b0cc184c103366",
+      "alphaBounds": {
+        "left": 787,
+        "top": 320,
+        "width": 2744,
+        "height": 1818
+      },
+      "outputSha256": "d110a0fba275ab9d917cf92d56075bb592a811142fd8a647bb3daeef8e528625",
+      "width": 720
+    },
+    {
+      "name": "wordmark-color",
+      "source": "brand/tlqm-2026/source/png/TA LUNG_2026_logo-17.png",
+      "sourceSha256": "7fb61261864963e7d5362c1f0cd7cfa1df2db820b733d1af3de4856680d0dd27",
+      "alphaBounds": {
+        "left": 787,
+        "top": 389,
+        "width": 2744,
+        "height": 572
+      },
+      "outputSha256": "617a72d411560898c2c3ca105ce89aa5bf0407289960f2dac98110893ce9c209",
+      "width": 640
+    },
+    {
+      "name": "wordmark-white",
+      "source": "brand/tlqm-2026/source/png/TA LUNG_2026_logo-21.png",
+      "sourceSha256": "d2e7c0f21f4d06bc40bd67f4a0692a3674488b37309a46d38ce7386f4400ec58",
+      "alphaBounds": {
+        "left": 787,
+        "top": 389,
+        "width": 2744,
+        "height": 572
+      },
+      "outputSha256": "c041ebc94d7a4c2c01de58a008789631cabffef89d2efb59eb0b140c9b5ea498",
+      "width": 640
+    }
+  ]
+}

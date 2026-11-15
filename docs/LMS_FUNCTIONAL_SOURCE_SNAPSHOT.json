@@ -1,0 +1,77 @@
+{
+  "checkedAt": "2026-11-10T04:46:22.0421275Z",
+  "sourceRoot": "D:/thanhnx/OpenCode/LMS-TLQM/tlqm-learning-mvp",
+  "gitVerified": false,
+  "runtimeVerified": false,
+  "purpose": "Read-only source reference for AIO functional LMS; no credentials/customer data or source modification",
+  "files": [
+    {
+      "path": "app/api/learning/route.ts",
+      "sha256": "a41ac7c5dc858b4939b2fa0040d7ce022e5e89983f11e2c034d26ecee1d05acc"
+    },
+    {
+      "path": "app/api/admin/route.ts",
+      "sha256": "64b57b62939e90b6305cfc1e9307fa836f59c4d825087203590c76e3387ab37f"
+    },
+    {
+      "path": "app/api/admin/upload-video/route.ts",
+      "sha256": "08ce3ed7c142877782f918cf73a5b00eebbbdc7611e976fce498d6f7f6845fe2"
+    },
+    {
+      "path": "lib/assessment.ts",
+      "sha256": "6c7d97b581351fa84afc7489f05af29fc2c9fdc0b1e4cfb8f95bf2d480fa9951"
+    },
+    {
+      "path": "lib/course-service.ts",
+      "sha256": "8738c5af77f9b1db253dc1478031d4a4645e8bf565d58012618005fd30e6243a"
+    },
+    {
+      "path": "lib/excel-utils.ts",
+      "sha256": "42c1c995d32e69c7f22805ec16872f1c6b331da757fd35df36934f2767d16e56"
+    },
+    {
+      "path": "lib/video-utils.ts",
+      "sha256": "fb88b19612de9757761a2e4c1a75cce7c0832781f37afd23a9183fee5fc7527a"
+    },
+    {
+      "path": "components/learning/VideoPlayer.tsx",
+      "sha256": "f5e42811e5130a5c0822bb068567e57d313bca0ae0c8a90124e1f3f3b6d97aa2"
+    },
+    {
+      "path": "components/learning/QuizView.tsx",
+      "sha256": "6fcb596e0404c212bf8501c3d685f6cebc1ad8417662077aa932512006d6868d"
+    },
+    {
+      "path": "components/learning/ResultView.tsx",
+      "sha256": "9e514da2eb478770e3378a792330591ab1459304aa46004b91be773f97e11116"
+    },
+    {
+      "path": "components/learning/CertificateModal.tsx",
+      "sha256": "4ea58261121036201fa9fcf272c3ead3ffb61c8615afa34cc5c8eca05aa6b6a2"
+    },
+    {
+      "path": "components/learning/LeaderboardView.tsx",
+      "sha256": "29bb815c2c6d3397249a87eea6ffb5d03080924755434dec6a527961cc0570fc"
+    },
+    {
+      "path": "components/learning/AITutorDrawer.tsx",
+      "sha256": "b554bbbdea43eafa0883d79fd42ef94eabce2e9edc9d3d90435f284b4f11e038"
+    },
+    {
+      "path": "components/admin/CourseEditorScreen.tsx",
+      "sha256": "0d7f551b1459a3a21b80f44dac56f4307bd007f12d142920bf21cc2c537f8de8"
+    },
+    {
+      "path": "components/admin/AdminDashboard.tsx",
+      "sha256": "2f3a3a6ef0986a31d48062b8b4673f24fae16b87e3ca03fcf3b5859bb1fd0112"
+    },
+    {
+      "path": "components/admin/EmployeeManager.tsx",
+      "sha256": "df993998f0517f2ea579eb4cbfc78ec21167b0d2a00aaf1494efc8ceece1fb10"
+    },
+    {
+      "path": "db/schema.ts",
+      "sha256": "0af3079ab9ea58d37b6f766ababec63c9865c01f3fa4bd8f41f0eb99b7b967f1"
+    }
+  ]
+}

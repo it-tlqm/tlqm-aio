@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "kind": "external-application",
+  "code": "aio-lms-sandbox",
+  "name": "LMS — Sandbox SSO",
+  "port": 4104
+}

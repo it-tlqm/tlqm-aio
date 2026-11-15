@@ -1,12 +1,12 @@
 # IAM/SSO — thiết kế dùng chung
 
-Ngày: 09/11/2026. Trạng thái: **thiết kế mục tiêu, đã triển khai lát cắt local**. Hai client thử đã nối Keycloak; auth của LMS/BOS chưa thay đổi. Xem [trạng thái triển khai](IMPLEMENTATION_STATUS.md).
+Ngày: 09/11/2026. Trạng thái: **thiết kế mục tiêu, đã triển khai lát cắt local**. Ba client thử A/B/C đã nối Keycloak; auth của LMS/BOS chưa thay đổi. Xem [trạng thái triển khai](IMPLEMENTATION_STATUS.md).
 
-Local hiện introspect access token ở mỗi request và kiểm tra grant trong PostgreSQL, không cache quyền. App session tối đa 5 phút, chưa có refresh tự động. Đã kiểm thử thu hồi grant, khóa user tại IdP, logout từng app và back-channel logout. SLA 60 giây ở phần dưới vẫn là mục tiêu cần đánh giá tải trước production.
+Local hiện introspect access token ở mỗi request và kiểm tra grant/quyền trong PostgreSQL, không cache quyền. BFF đã có refresh token mã hóa, khóa phiên chống refresh đồng thời, idle 15 phút/absolute 60 phút và rotation. Đã kiểm thử token hết hạn thật, thu hồi grant, MFA/recovery quản trị, khóa user tại IdP, logout từng app và back-channel logout A/B/C. SLA 60 giây ở phần dưới vẫn là mục tiêu cần đánh giá tải trước production; số đo local không phải SLA production.
 
 ## Phân chia trách nhiệm
 
-Identity Provider local là Keycloak; phương án vận hành production còn mở. IdP xác thực, quản lý credential, MFA và phiên SSO. Directory quản lý người/tổ chức. Access quản lý cấp quyền ứng dụng. Mỗi backend kiểm tra quyền trên dữ liệu của mình. MFA chưa được bật bắt buộc trong lát cắt local này.
+Identity Provider local là Keycloak; phương án vận hành production còn mở. IdP xác thực, quản lý credential, MFA và phiên SSO. Directory quản lý người/tổ chức. Access quản lý cấp quyền ứng dụng. Mỗi backend kiểm tra quyền trên dữ liệu của mình. Quản trị local bắt buộc AMR pwd+otp đã xác minh tại backend; flow Keycloak yêu cầu enrollment/OTP cho hai quản trị bootstrap và có quản trị dự phòng để diễn tập recovery. [Runbook MFA](LOCAL_MFA_RECOVERY.md), [onboarding client](LOCAL_CLIENT_ONBOARDING.md).
 
 Đề xuất môi trường dev/test/production có issuer, client và secrets tách biệt. PoC dùng một realm workforce với client riêng cho từng ứng dụng; không tạo realm theo ứng dụng. Mô hình khách hàng/đối tác và realm bên ngoài cần ADR riêng trước khi triển khai CIAM.
 

@@ -1,6 +1,6 @@
 # Sprint 01 — Foundation và chuẩn bị Forms/LMS
 
-Ngày: 09/11/2026. Trạng thái: **đang triển khai lát cắt Foundation local**. Chi tiết thực tế ở [IMPLEMENTATION_STATUS](../docs/IMPLEMENTATION_STATUS.md); chưa coi toàn Sprint 01 hoàn tất.
+Ngày: 10/11/2026. Trạng thái: **Foundation, Forms MVP và adapter LMS sandbox đã nghiệm thu local**. Chi tiết ở [IMPLEMENTATION_STATUS](../docs/IMPLEMENTATION_STATUS.md). Source/repo LMS hiện hữu vẫn chưa được quản lý phiên bản tại đường dẫn đã khảo sát; không coi toàn bộ việc chuẩn bị pilot/production của Sprint 01 đã xong.
 
 Mục tiêu: có nền tảng xác thực/tổ chức/quyền nhỏ nhưng kiểm chứng được, đồng thời chốt cách xây Form Builder và nối LMS. Không lấy LIMS làm dependency của sprint.
 
@@ -51,4 +51,4 @@ Code, khi được giao xây, nằm đúng phạm vi source/nhánh được phé
 
 Các negative tests scope/tenant/token, thu hồi quyền và giữ lịch sử LMS phải có trước pilot. Cấu hình và dữ liệu thử có thể dựng lại; rollback không xóa dữ liệu học/phiếu cũ. Chưa push/deploy khi chưa được phép trong nhiệm vụ tương ứng.
 
-Đợt hiện tại đã triển khai lát cắt local của S1-02 đến S1-06; chưa đánh dấu trọn các mục là done vì còn MFA, vòng đời, quản trị và các điều kiện nghiệm thu khác.
+Foundation đã đạt [gate riêng](../docs/FOUNDATION_ACCEPTANCE.md); Forms đã đạt [MVP local](../docs/FORMS_ACCEPTANCE.md). S1-07/08 có ADR và module chạy; S1-09 có adapter Workers/D1 sandbox, mapping/historical fixtures và [bằng chứng](../docs/LMS_ACCEPTANCE.md). Quyền Forms/LMS đã được kiểm thử riêng theo app/unit. Phần còn lại gồm nguồn/repo LMS thật được xác nhận/versioning và các quyết định owner/pilot/production ngoài phạm vi local; không dùng sandbox để tuyên bố những việc đó hoàn thành.

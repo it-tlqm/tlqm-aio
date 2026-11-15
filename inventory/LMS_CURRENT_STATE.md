@@ -47,3 +47,5 @@ Chưa phát hiện OIDC/Keycloak trong auth.ts và route auth đã khảo sát. 
 Rủi ro chính: thiếu version control tại đường dẫn hiện tại, seed trên login, field password bắt buộc, session dài, quyền manager chưa tách rõ, department text và nguy cơ tạo trùng học viên. Đề xuất xử lý trong [LMS_SSO_INTEGRATION](../docs/LMS_SSO_INTEGRATION.md).
 
 Không kết luận mức hoàn thành phần trăm; không có kết quả kiểm thử mới trong đợt này.
+
+Kiểm lại source có giới hạn ngày 10/11/2026 vẫn chưa có Git root; đọc chữ ký getAuthUser/validateSession/createSession và call-site paths, không chạy LMS. Kết quả workerd/D1 mới thuộc **sandbox riêng của AIO**, không làm thay đổi trạng thái chưa kiểm thử của source LMS hiện hữu. Xem [runbook sandbox](../docs/LMS_LOCAL_DEVELOPMENT.md) và [nghiệm thu adapter](../docs/LMS_ACCEPTANCE.md).

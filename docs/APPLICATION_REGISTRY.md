@@ -1,6 +1,6 @@
 # Application Registry và hợp đồng tích hợp
 
-Ngày: 09/11/2026. Trạng thái: **hợp đồng mục tiêu; đã đăng ký hai client local aio-foundation và aio-probe**. Các code dưới đây dành cho ứng dụng sản phẩm tương lai, chưa thay thế hai client kiểm chứng.
+Ngày: 10/11/2026. Trạng thái: **CRUD Registry/delegation và onboarding local v1/v2/v3 đã chạy**, gồm probe, application Forms/Quy trình và external application LMS sandbox. Ownership sản phẩm/production dưới đây vẫn là hợp đồng mục tiêu. [Runbook client local](LOCAL_CLIENT_ONBOARDING.md).
 
 ## Bản ghi tối thiểu
 
@@ -10,17 +10,19 @@ Mỗi môi trường có environment, issuer, clientId, API audience, base URL, 
 
 Thay redirect/issuer/owner là thao tác quản trị có audit và review phù hợp. Không dùng URL do end-user gửi để redirect hoặc gọi discovery.
 
-| Code dự kiến | Vai trò | Trạng thái |
+| Code | Vai trò | Trạng thái |
 | --- | --- | --- |
 | aio-admin | Quản trị Foundation | Đề xuất |
 | aio-portal | Cổng ứng dụng tối thiểu | Đề xuất |
-| aio-forms | Form Builder, khảo sát và phiếu nội bộ | Ưu tiên giai đoạn đầu |
+| aio-forms | Form Builder, khảo sát và phiếu nội bộ | MVP local đã nghiệm thu |
+| aio-workflows | Module Quy trình | Bản local đầu chạy ở 4105 |
+| aio-lms-sandbox | Adapter LMS giả lập | Đã kiểm chứng; không phải LMS hiện hữu |
 | tlqm-lms | Đào tạo | Source local đã xác minh, chưa tích hợp |
 | bos | Nền tảng điều hành hiện hữu | Khảo sát, tích hợp sau |
 | lims | Phòng lab, dự án riêng | Giai đoạn sau; chưa có source |
 | yms / crm / erp | Nhóm mở rộng | Cần registry riêng theo hệ thống thực tế |
 
-Các code trong bảng trên là đề xuất. Client đang dùng tại IdP local là aio-foundation và aio-probe; không dùng chúng như client production.
+Client IdP local đang dùng là aio-foundation, aio-probe, aio-onboarding, aio-forms, aio-workflows và aio-lms-sandbox; không dùng như client production. Các code khác trong bảng còn đề xuất/chưa tích hợp. Mỗi client có audience/cookie/quyền riêng; fixture được cấp rõ qua governance, không seed grant chung cho toàn bộ người dùng.
 
 ## Checklist onboarding một ứng dụng
 

@@ -1,6 +1,6 @@
 # Mô hình truy cập ứng dụng
 
-Ngày: 09/11/2026. Trạng thái: **mô hình mục tiêu, đã có lát cắt local**. Hiện hỗ trợ app grant, role/permission bootstrap, scope theo tenant, delegated app administration, cấp/thu hồi grant và audit. Chưa có UI/CRUD roles hay scope theo form/đơn vị; xem [trạng thái](IMPLEMENTATION_STATUS.md).
+Ngày: 09/11/2026. Trạng thái: **đã có API/UI local cho catalog, roles, bindings và grants**, scope tenant/đơn vị, delegation, MFA quản trị, revision/idempotency và audit. Scope theo form thuộc giai đoạn Forms; UI còn cần nghiệm thu toàn bộ workflow. Xem [trạng thái](IMPLEMENTATION_STATUS.md).
 
 ## Quyết định cho phép
 
@@ -12,8 +12,8 @@ Mặc định từ chối. Portal chỉ hiển thị ứng dụng được cấp
 | --- | --- |
 | Application | appId, code, owner, trạng thái |
 | ApplicationGrant | accountId, appId, hiệu lực, trạng thái |
-| AppRole | appId + roleCode; không dùng role global tùy tiện |
-| Permission | namespace/action, schemaVersion, mô tả |
+| AppRole | Local: tenantId + appCode + roleCode; không dùng role global tùy tiện |
+| Permission | Local: appCode + permissionCode; namespace/action, mô tả. schemaVersion là phần hợp đồng mở rộng |
 | RolePermission | roleId → permissionCode |
 | RoleBinding | accountId, appId, roleId, scope, hiệu lực, người cấp, lý do |
 | DataScope | tenant bắt buộc khi app có tenant; legalEntity/orgUnit/self/formId theo loại quyền |
@@ -55,6 +55,8 @@ LMS hiện khai báo learner/admin/manager; API admin đã đọc yêu cầu adm
 Foundation cung cấp read API cho actor hiện tại: hồ sơ tối thiểu, org memberships, ứng dụng được cấp và effective permissions theo app/scope. Client nghiệp vụ không được đọc toàn bộ quyền của người khác.
 
 API quản trị có action tách biệt create/update/grant/revoke và optimistic concurrency. App gọi API với client credential/scope riêng khi cần; không phát credential chung cho tất cả ứng dụng.
+
+Trong local hiện tại, /api/v1/manage/grants và hai alias /api/v1/access/grants, /revoke dùng chung GovernanceService, revision, idempotency receipt và audit before/after. Alias cũng bắt buộc expectedRevision/Idempotency-Key; không tự xóa validUntil khi cấp lại nếu caller không yêu cầu. Danh mục ứng dụng thử bổ sung được cấp quyền tường minh, không nhận blanket grants từ db:setup. [Hướng dẫn local](LOCAL_DEVELOPMENT.md).
 
 Response nên chứa policyVersion, evaluatedAt và expiresAt. Lỗi xác thực trả 401; đã xác thực nhưng không được phép trả 403 hoặc 404 khi cần giấu tồn tại đối tượng.
 

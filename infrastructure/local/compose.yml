@@ -30,7 +30,7 @@ services:
       retries: 30
   keycloak:
     image: quay.io/keycloak/keycloak:26.8.2
-    command: ["start-dev", "--import-realm"]
+    command: ["start-dev", "--import-realm", "--spi-theme--static-max-age=-1", "--spi-theme--cache-themes=false", "--spi-theme--cache-templates=false"]
     depends_on:
       identity-db:
         condition: service_healthy
@@ -48,6 +48,7 @@ services:
       - "127.0.0.1:8180:8080"
     volumes:
       - ../../.local/realm:/opt/keycloak/data/import:ro
+      - ../keycloak/themes/tlqm:/opt/keycloak/themes/tlqm:ro
     mem_limit: 2g
 volumes:
   identity-data:

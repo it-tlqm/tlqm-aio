@@ -19,7 +19,7 @@ Portal tối thiểu là màn hình truy cập và quản trị nền tảng. **
 
 ## Ranh giới giai đoạn
 
-Người dùng đã cho phép xây SSO/nền tảng chung bằng TypeScript + Fastify. Đã triển khai bộ khung local; mức hoàn thành từng mục được ghi trong [trạng thái triển khai](IMPLEMENTATION_STATUS.md). Tiêu chí Foundation MVP dưới đây vẫn là đích đến, chưa được đánh dấu đạt toàn bộ.
+Người dùng đã cho phép xây SSO/nền tảng chung bằng TypeScript + Fastify và tiếp tục Forms, rồi LMS sau Foundation. Mức hoàn thành từng mục được ghi trong [trạng thái triển khai](IMPLEMENTATION_STATUS.md) và [đối chiếu nghiệm thu](FOUNDATION_ACCEPTANCE.md).
 
 Foundation MVP đề xuất gồm Identity, Directory, Access, Registry, audit và trang kiểm chứng tối thiểu. Hai client thử chứng minh luồng chung trước khi gắn vào một hệ thống đang dùng. Sau đó xây Form Builder MVP và tích hợp LMS; có thể thực hiện đồng thời nếu đủ nguồn lực, nhưng không bỏ qua cổng nghiệm thu nền tảng.
 
@@ -42,10 +42,10 @@ Chưa bao gồm ERP/HRM đầy đủ, lương, công, CRM, nghiệp vụ LIMS, k
 
 | Đã chốt bởi người dùng | Chưa chốt |
 | --- | --- |
-| Tên TLQM AIO, repo it-tlqm/tlqm-aio | Phiên bản Keycloak, nhà cung cấp hosting, domain |
+| Tên TLQM AIO, repo it-tlqm/tlqm-aio; local pin Keycloak 26.8.2, PostgreSQL 17.7 | Topology/hosting/domain và vận hành production |
 | Nền tảng và SSO trước | Nguồn nhân sự chuẩn, IdP/AD/Microsoft 365 hiện có |
 | Ưu tiên Form Builder và tích hợp LMS | Phạm vi khảo sát đầu tiên, owner dữ liệu LMS, môi trường pilot |
 | Giữ source cũ nguyên trạng trong kiểm kê | Mức tái sử dụng code BOS, giấy phép và quyền chuyển code |
-| Chỉ tài liệu ở giai đoạn khởi tạo | Monorepo/multi-repo cho code tương lai, lịch và nhân lực |
+| TypeScript + Fastify, frontend React/shadcn; code/test trong Master Project | Cách phân phối nhiều repository khi vận hành, lịch và nhân lực |
 
 Các mục còn mở về hosting không cản việc hoàn thiện thiết kế nền tảng. LIMS riêng chưa có đường dẫn và được để lại cho giai đoạn sau.

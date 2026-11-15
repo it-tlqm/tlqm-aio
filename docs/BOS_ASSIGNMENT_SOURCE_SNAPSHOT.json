@@ -1,0 +1,21 @@
+{
+  "checkedAt": "2026-11-09T23:42:09.076Z",
+  "root": "D:/thanhnx/OpenCode/BOS/bos-workspace",
+  "branch": "codex/crm-app-yms",
+  "head": "a17d87a1bfe0176e6319fbc0cf2393d1e85fb5fc",
+  "dirty": true,
+  "files": [
+    {
+      "path": "backend-nestjs/src/modules/workflows/workflows.service.ts",
+      "sha256": "1266d4cbc888123fdc37a752f9463691c14a53a69148fb13d2f421b67c57e3d9"
+    },
+    {
+      "path": "backend-nestjs/src/modules/governance/governance-approval-selector.registry.ts",
+      "sha256": "4eeda91dcc2cd31537c3fb5833a0726edca72a1b705885d550923d9328ac8aef"
+    },
+    {
+      "path": "frontend-nextjs/src/app/(core)/metadata/[id]/components/shared/stepAssigneeUtils.ts",
+      "sha256": "f37c8be5388dc586317cb98891b4b4c76af0e2a00e788462492318c92c2c485b"
+    }
+  ]
+}

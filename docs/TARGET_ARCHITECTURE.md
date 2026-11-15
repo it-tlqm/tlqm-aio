@@ -46,7 +46,7 @@ Tái sử dụng ưu tiên hợp đồng dữ liệu, danh mục quyền và kin
 
 | Thành phần | Đề xuất | Cơ sở/giới hạn |
 | --- | --- | --- |
-| Identity Provider | Keycloak qua OIDC | Local pin 26.8.2; đã kiểm chứng SSO hai client, chưa chốt vận hành production |
+| Identity Provider | Keycloak qua OIDC | Local pin 26.8.2; đã kiểm chứng SSO A/B/C, MFA quản trị và renewal; chưa chốt vận hành production |
 | Foundation API | TypeScript + Fastify | Người dùng đã chốt; Node 24, backend chia module |
 | Directory/Access/Registry | PostgreSQL, module ownership rõ | Cần quan hệ và lịch sử nhất quán; không ép đổi DB ứng dụng cũ |
 | Admin/Portal tương lai | React + TypeScript + Vite + Tailwind v4 + shadcn/ui | Người dùng ưu tiên shadcn và palette TLQM; hiện vẫn là trang HTML/JS kiểm chứng auth |

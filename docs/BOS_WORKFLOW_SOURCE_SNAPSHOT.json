@@ -1,0 +1,29 @@
+{
+  "checkedAt": "2026-11-09T21:17:54.313Z",
+  "root": "D:/thanhnx/OpenCode/BOS/bos-workspace/",
+  "branch": "codex/crm-app-yms",
+  "head": "818de77907bf6a2067807889afb708d6142c767b",
+  "dirty": true,
+  "files": [
+    {
+      "path": "backend-nestjs/src/core/configuration-rules/configuration-rule-engine.ts",
+      "sha256": "934f35a3968bca2edee3bf29b15a07e0e79f22dd05edfc252e24394a90841c3f"
+    },
+    {
+      "path": "frontend-nextjs/src/utils/workflowLayout.ts",
+      "sha256": "63bbfc0dce3702bf2425d331eee29c13f10b23e1315fdaba84ed5a0550e5fe2e"
+    },
+    {
+      "path": "packages/core/src/lib/configuration-rule-conformance.json",
+      "sha256": "8dfd7b6238f16cab27bc737856cf37c2ec0d9d95eec86ffd576966887aaed026"
+    },
+    {
+      "path": "backend-nestjs/src/modules/workflows/workflows.service.ts",
+      "sha256": "1266d4cbc888123fdc37a752f9463691c14a53a69148fb13d2f421b67c57e3d9"
+    },
+    {
+      "path": "backend-nestjs/src/modules/governance/governance-approval-engine.ts",
+      "sha256": "2f3bc83b0b611e35bb0796494121fc185921a3295990b3f4e31d98beff4a35e4"
+    }
+  ]
+}

@@ -1,189 +1,133 @@
-import { readFile } from 'node:fs/promises';
-import { createHash, randomUUID } from 'node:crypto';
+import { copyFile, readFile, writeFile, rename } from 'node:fs/promises';
+import { constants } from 'node:fs';
+import { randomBytes } from 'node:crypto';
 import pg from 'pg';
-import { assertLocalDatabase, loadLocalConfig, testDatabaseUrl } from '../src/config.js';
-import { demoUsers, ids } from '../src/fixtures.js';
+import { assertLocalDatabase, loadLocalConfig } from '../src/config.js';
+import { migrateDatabase } from '../src/database/migrate.js';
+import { bootstrapFixtures } from '../src/database/bootstrap.js';
+import { localKeycloakAdmin } from '../src/local-keycloak-admin.js';
+import { verifyClientRegistration } from './client-contract.js';
 
 const config = await loadLocalConfig();
-const adminPool = new pg.Pool({ connectionString: config.databaseUrl, max: 1 });
+const keycloak = await localKeycloakAdmin(config);
+const verifiedClients = new Set<string>();
+for (const client of config.clients) {
+  if (client.kind !== undefined) {
+    const candidates = (await (
+      await keycloak('/clients?clientId=' + encodeURIComponent(client.clientId))
+    ).json()) as { id: string; clientId: string }[];
+    const candidate = candidates.find((value) => value.clientId === client.clientId);
+    if (!candidate || candidates.length !== 1)
+      throw new Error('Onboarded local client is missing or ambiguous.');
+    const registration = (await (await keycloak('/clients/' + candidate.id)).json()) as Record<
+      string,
+      unknown
+    >;
+    verifyClientRegistration(client, config.instanceId, registration, true);
+    // Explicitly disabled integrations may stay disabled during migrations/seed.
+    continue;
+  }
+  const records = (await (
+    await keycloak('/clients?clientId=' + encodeURIComponent(client.clientId))
+  ).json()) as {
+    clientId: string;
+    enabled: boolean;
+    publicClient: boolean;
+    protocol: string;
+    redirectUris: string[];
+  }[];
+  if (
+    !records.some(
+      (record) =>
+        record.clientId === client.clientId &&
+        record.enabled &&
+        !record.publicClient &&
+        record.protocol === 'openid-connect' &&
+        record.redirectUris.includes(client.baseUrl + '/auth/callback'),
+    )
+  )
+    throw new Error('Local client registration does not match the approved manifest.');
+  verifiedClients.add(client.code);
+}
+assertLocalDatabase(config.databaseUrl);
+if (new URL(config.databaseUrl).username !== 'aio_foundation')
+  throw new Error('Provisioning requires the local migration owner.');
+const owner = new pg.Pool({ connectionString: config.databaseUrl, max: 1 });
 try {
-  const exists = await adminPool.query(
-    "SELECT 1 FROM pg_database WHERE datname = 'aio_foundation_test'",
+  const marker = await owner.query("SELECT to_regclass('public.environment_marker') AS table_name");
+  if (marker.rows[0]?.table_name) {
+    const identity = await owner.query('SELECT purpose FROM environment_marker');
+    if (identity.rows[0]?.purpose !== 'tlqm-aio-local')
+      throw new Error('Unexpected source database marker.');
+  }
+  const existingRole = await owner.query(
+    "SELECT rolname FROM pg_roles WHERE rolname='aio_runtime'",
   );
-  if (!exists.rowCount) await adminPool.query('CREATE DATABASE aio_foundation_test');
+  if (existingRole.rowCount && !config.databaseRuntime)
+    throw new Error('Unidentified runtime role already exists.');
+  if (!config.databaseRuntime) {
+    config.databaseRuntime = { username: 'aio_runtime', password: randomBytes(32).toString('hex') };
+    try {
+      await copyFile(
+        '.local/runtime.json',
+        '.local/runtime.before-foundation-mvp.json',
+        constants.COPYFILE_EXCL,
+      );
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== 'EEXIST') throw error;
+    }
+    await writeFile('.local/runtime.next.json', JSON.stringify(config, null, 2) + '\n', {
+      mode: 0o600,
+    });
+    await rename('.local/runtime.next.json', '.local/runtime.json');
+  }
+  if (!existingRole.rowCount) await owner.query('CREATE ROLE aio_runtime NOLOGIN');
+  const alter = await owner.query<{ sql: string }>(
+    "SELECT format('ALTER ROLE aio_runtime LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT PASSWORD %L',$1::text) AS sql",
+    [config.databaseRuntime.password],
+  );
+  await owner.query(alter.rows[0]!.sql);
+  const exists = await owner.query("SELECT 1 FROM pg_database WHERE datname='aio_foundation_test'");
+  if (!exists.rowCount) await owner.query('CREATE DATABASE aio_foundation_test');
 } finally {
-  await adminPool.end();
+  await owner.end();
 }
 
 for (const test of [false, true]) {
-  const url = test ? testDatabaseUrl(config) : config.databaseUrl;
-  assertLocalDatabase(url, test);
-  const pool = new pg.Pool({ connectionString: url, max: 1 });
-  const client = await pool.connect();
+  const url = new URL(config.databaseUrl);
+  url.pathname = test ? '/aio_foundation_test' : '/aio_foundation';
+  assertLocalDatabase(url.href, test);
+  const pool = new pg.Pool({ connectionString: url.href, max: 1 });
+  const db = await pool.connect();
   try {
-    await client.query('BEGIN');
-    await client.query('SELECT pg_advisory_xact_lock(71092026)');
-    await client.query(
-      'CREATE TABLE IF NOT EXISTS schema_migrations (version text PRIMARY KEY, checksum text NOT NULL, applied_at timestamptz NOT NULL DEFAULT now())',
+    const versions = await migrateDatabase(db, test ? 'tlqm-aio-test' : 'tlqm-aio-local');
+    await bootstrapFixtures(db, config, verifiedClients);
+    await db.query('BEGIN');
+    const database = test ? 'aio_foundation_test' : 'aio_foundation';
+    await db.query('REVOKE ALL ON DATABASE ' + database + ' FROM PUBLIC');
+    await db.query('GRANT CONNECT ON DATABASE ' + database + ' TO aio_runtime');
+    await db.query('REVOKE CREATE ON SCHEMA public FROM PUBLIC');
+    await db.query('GRANT USAGE ON SCHEMA public TO aio_runtime');
+    await db.query(
+      'GRANT SELECT,INSERT,UPDATE,DELETE ON ALL TABLES IN SCHEMA public TO aio_runtime',
     );
-    const sql = await readFile('infrastructure/database/001-foundation.sql', 'utf8');
-    const checksum = createHash('sha256').update(sql).digest('hex');
-    const prior = await client.query<{ checksum: string }>(
-      'SELECT checksum FROM schema_migrations WHERE version=$1',
-      ['001'],
+    await db.query('GRANT USAGE,SELECT ON ALL SEQUENCES IN SCHEMA public TO aio_runtime');
+    await db.query(
+      'REVOKE INSERT,UPDATE,DELETE ON schema_migrations,environment_marker,bootstrap_receipts FROM aio_runtime',
     );
-    if (prior.rows[0] && prior.rows[0].checksum !== checksum)
-      throw new Error('Migration checksum changed; create a new migration.');
-    if (!prior.rowCount) {
-      const tables = await client.query(
-        "SELECT tablename FROM pg_tables WHERE schemaname='public' AND tablename <> 'schema_migrations'",
-      );
-      if (tables.rowCount) throw new Error('Refusing migration in an unidentified database.');
-      await client.query(sql);
-      await client.query('INSERT INTO environment_marker(purpose) VALUES ($1)', [
-        test ? 'tlqm-aio-test' : 'tlqm-aio-local',
-      ]);
-      await client.query('INSERT INTO schema_migrations(version,checksum) VALUES ($1,$2)', [
-        '001',
-        checksum,
-      ]);
-    }
-    const marker = await client.query<{ purpose: string }>(
-      'SELECT purpose FROM environment_marker',
-    );
-    if (marker.rows[0]?.purpose !== (test ? 'tlqm-aio-test' : 'tlqm-aio-local'))
-      throw new Error('Wrong database marker.');
-    for (const [id, code, name] of [
-      [ids.tenantA, 'DEMO-A', 'Không gian thử A'],
-      [ids.tenantB, 'DEMO-B', 'Không gian thử B'],
-    ]) {
-      await client.query(
-        'INSERT INTO tenants(id,code,name) VALUES ($1,$2,$3) ON CONFLICT DO NOTHING',
-        [id, code, name],
-      );
-    }
-    for (const item of config.clients) {
-      await client.query(
-        "INSERT INTO applications(code,name,status,launch_url) VALUES ($1,$2,'active',$3) ON CONFLICT DO NOTHING",
-        [item.code, item.name, item.baseUrl],
-      );
-      await client.query(
-        "INSERT INTO app_roles(app_code,code) VALUES ($1,'reader'),($1,'access-admin') ON CONFLICT DO NOTHING",
-        [item.code],
-      );
-      for (const [role, permission] of [
-        ['reader', 'directory:read'],
-        ['access-admin', 'directory:read'],
-        ['access-admin', 'access:manage'],
-        ['access-admin', 'audit:read'],
-      ]) {
-        await client.query(
-          'INSERT INTO role_permissions(app_code,role_code,permission) VALUES ($1,$2,$3) ON CONFLICT DO NOTHING',
-          [item.code, role, permission],
-        );
-      }
-    }
-    await client.query(
-      "INSERT INTO applications(code,name,status) VALUES ('aio-forms','AIO Forms','planned'),('tlqm-lms','TLQM LMS','planned') ON CONFLICT DO NOTHING",
-    );
-    for (const user of demoUsers) {
-      await client.query(
-        'INSERT INTO persons(id,display_name) VALUES ($1,$2) ON CONFLICT DO NOTHING',
-        [user.id, user.name],
-      );
-      await client.query(
-        'INSERT INTO accounts(id,person_id,active) VALUES ($1,$1,$2) ON CONFLICT DO NOTHING',
-        [user.id, user.id !== ids.blocked],
-      );
-      await client.query(
-        'INSERT INTO external_identities(issuer,subject,account_id) VALUES ($1,$2,$3) ON CONFLICT DO NOTHING',
-        [config.issuer, user.id, user.id],
-      );
-      await client.query(
-        'INSERT INTO tenant_memberships(account_id,tenant_id) VALUES ($1,$2) ON CONFLICT DO NOTHING',
-        [user.id, user.tenantId],
-      );
-      for (const app of config.clients) {
-        if (user.id !== ids.noAccess)
-          await client.query(
-            'INSERT INTO application_grants(account_id,tenant_id,app_code) VALUES ($1,$2,$3) ON CONFLICT DO NOTHING',
-            [user.id, user.tenantId, app.code],
-          );
-        const role = user.id === ids.admin ? 'access-admin' : 'reader';
-        for (const managed of user.id === ids.admin ? config.clients.map((c) => c.code) : [null]) {
-          const existing = await client.query(
-            'SELECT 1 FROM role_bindings WHERE account_id=$1 AND app_code=$2 AND role_code=$3 AND managed_app_code IS NOT DISTINCT FROM $4',
-            [user.id, app.code, role, managed],
-          );
-          if (!existing.rowCount)
-            await client.query(
-              'INSERT INTO role_bindings(id,account_id,tenant_id,app_code,role_code,managed_app_code) VALUES ($1,$2,$3,$4,$5,$6)',
-              [randomUUID(), user.id, user.tenantId, app.code, role, managed],
-            );
-        }
-      }
-    }
-    for (const [id, tenant, code, name] of [
-      [ids.legalA, ids.tenantA, 'LEGAL-A', 'Pháp nhân giả lập A'],
-      [ids.legalB, ids.tenantB, 'LEGAL-B', 'Pháp nhân giả lập B'],
-    ]) {
-      await client.query(
-        'INSERT INTO legal_entities(id,tenant_id,code,name) VALUES ($1,$2,$3,$4) ON CONFLICT DO NOTHING',
-        [id, tenant, code, name],
-      );
-    }
-    for (const [id, tenant, legal, code, name] of [
-      [ids.unitA, ids.tenantA, ids.legalA, 'HR', 'Đào tạo'],
-      [ids.unitC, ids.tenantA, ids.legalA, 'DIGITAL', 'Chuyển đổi số'],
-      [ids.unitB, ids.tenantB, ids.legalB, 'OPS', 'Vận hành'],
-    ]) {
-      await client.query(
-        'INSERT INTO org_units(id,tenant_id,legal_entity_id,code,name) VALUES ($1,$2,$3,$4,$5) ON CONFLICT DO NOTHING',
-        [id, tenant, legal, code, name],
-      );
-    }
-    const title = '50000000-0000-4000-8000-000000000001';
-    const employment = '60000000-0000-4000-8000-000000000001';
-    await client.query(
-      "INSERT INTO job_titles(id,code,name) VALUES ($1,'SPECIALIST','Chuyên viên') ON CONFLICT DO NOTHING",
-      [title],
-    );
-    await client.query(
-      "INSERT INTO employments(id,person_id,tenant_id,legal_entity_id,employee_code) VALUES ($1,$2,$3,$4,'NV-DEMO-01') ON CONFLICT DO NOTHING",
-      [employment, ids.learner, ids.tenantA, ids.legalA],
-    );
-    for (const [position, assignment, unit, primary] of [
-      [
-        '70000000-0000-4000-8000-000000000001',
-        '80000000-0000-4000-8000-000000000001',
-        ids.unitA,
-        true,
-      ],
-      [
-        '70000000-0000-4000-8000-000000000002',
-        '80000000-0000-4000-8000-000000000002',
-        ids.unitC,
-        false,
-      ],
-    ]) {
-      await client.query(
-        'INSERT INTO positions(id,tenant_id,legal_entity_id,org_unit_id,job_title_id,name) VALUES ($1,$2,$3,$4,$5,$6) ON CONFLICT DO NOTHING',
-        [position, ids.tenantA, ids.legalA, unit, title, 'Vị trí thử nghiệm'],
-      );
-      await client.query(
-        'INSERT INTO assignments(id,tenant_id,legal_entity_id,employment_id,position_id,is_primary) VALUES ($1,$2,$3,$4,$5,$6) ON CONFLICT DO NOTHING',
-        [assignment, ids.tenantA, ids.legalA, employment, position, primary],
-      );
-    }
-    await client.query('COMMIT');
+    await db.query('REVOKE UPDATE,DELETE ON audit_events,mutation_receipts FROM aio_runtime');
+    await db.query('COMMIT');
     console.log(
-      (test ? 'Test' : 'Local') + ' Foundation database ready; existing grants/accounts preserved.',
+      (test ? 'Test' : 'Local') +
+        ' database ready: migrations ' +
+        versions.join(',') +
+        '; API role is aio_runtime.',
     );
   } catch (error) {
-    await client.query('ROLLBACK');
+    await db.query('ROLLBACK');
     throw error;
   } finally {
-    client.release();
+    db.release();
     await pool.end();
   }
 }

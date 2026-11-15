@@ -1,6 +1,6 @@
 # Mô hình định danh và cơ cấu tổ chức
 
-Ngày: 09/11/2026. Trạng thái: **mô hình logic mục tiêu**. Migration local đã hiện thực phần lõi person/account/identity, tenant, đơn vị, chức danh, vị trí, employment và assignment. ExternalOrganization, ReportingLine và quản trị vòng đời đầy đủ chưa triển khai; xem [trạng thái](IMPLEMENTATION_STATUS.md).
+Ngày cập nhật: 10/11/2026. Trạng thái: **lõi person/account/identity/tenant/tổ chức/nhân sự đã có API/UI local**. Migration 005 và [vòng đời định danh](IDENTITY_LIFECYCLE.md) bổ sung proof OIDC, xác nhận liên kết, thu hồi, khóa/mở lại và offboard có audit. ExternalOrganization, ReportingLine và đồng bộ HR/AD production chưa triển khai; xem [trạng thái](IMPLEMENTATION_STATUS.md).
 
 ## Các đối tượng
 
@@ -10,7 +10,7 @@ Ngày: 09/11/2026. Trạng thái: **mô hình logic mục tiêu**. Migration loc
 | Account | accountId, personId, trạng thái | Tài khoản do AIO theo dõi; credential ở IdP |
 | ExternalIdentity | identityId, issuer, subject, accountId, clientContext khi cần | Liên kết identity đã xác minh; duy nhất issuer + subject |
 | LegalEntity | legalEntityId, mã, tên | Pháp nhân |
-| OrgUnit | orgUnitId, legalEntityId, parentId, loại | Khối/phòng/ban/đơn vị |
+| OrgUnit | orgUnitId, legalEntityId, parentId, mã, tên, active | Khối/phòng/ban/đơn vị |
 | JobTitle | jobTitleId, mã, tên | Chức danh danh mục |
 | Position | positionId, orgUnitId, jobTitleId | Vị trí trong một đơn vị |
 | Employment | employmentId, personId, legalEntityId, mã nhân sự, trạng thái, hiệu lực | Quan hệ công tác với pháp nhân |
@@ -22,6 +22,8 @@ Ngày: 09/11/2026. Trạng thái: **mô hình logic mục tiêu**. Migration loc
 | LegacyIdentityMap | appId, legacyUserId, accountId, verifiedAt, verifiedBy | Nối user cũ với AIO mà giữ lịch sử |
 
 Account không đồng nghĩa employment. Một người có thể làm việc với hai pháp nhân và có nhiều assignment. Với MVP, ưu tiên một account workforce chính mỗi người; nhiều account hoặc subject khác nhau phải có lý do và liên kết có kiểm chứng.
+
+Màn làm việc tập trung cho cây đơn vị, danh bạ/hồ sơ và ma trận vai trò được mô tả trong [hướng dẫn cơ cấu và phân quyền](ORGANIZATION_WORKSPACE.md). Các danh mục và mutation dùng chung với API hiện có; không phát sinh role từ chức danh hoặc bổ nhiệm.
 
 ## Bất biến cần kiểm thử
 

@@ -1,0 +1,7 @@
+{
+  "version": 2,
+  "kind": "application",
+  "code": "aio-cms",
+  "name": "AIO CMS",
+  "port": 4107
+}

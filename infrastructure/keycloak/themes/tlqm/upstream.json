@@ -1,0 +1,8 @@
+{
+  "keycloakVersion": "26.8.2",
+  "parent": "keycloak.v2",
+  "source": "theme/keycloak.v2/login/template.ftl",
+  "sourceSha256": "6221a3176c73a3fd67abc97076deb9cef112378ce157735a78bd865800315b37",
+  "license": "KEYCLOAK-LICENSE.txt",
+  "modifications": "TLQM outer shell, brand panel, topbar locale placement and helper text; authentication templates/form actions inherited."
+}

@@ -1,0 +1,377 @@
+{
+  "outOfScope": [
+    {
+      "ids": "V4.3.1 V4.3.2",
+      "evidence": "protocol",
+      "next": "Đối chiếu lại route, dependency và bundle ứng viên để xác nhận không có GraphQL."
+    },
+    {
+      "ids": "V4.4.1 V4.4.2 V4.4.3 V4.4.4",
+      "evidence": "protocol",
+      "next": "Đối chiếu lại ingress và bundle ứng viên để xác nhận không có WebSocket."
+    },
+    {
+      "ids": "V17.1.1 V17.2.1 V17.2.2 V17.2.3 V17.2.4 V17.3.1 V17.3.2",
+      "evidence": "protocol",
+      "next": "Kiểm lại TURN, signaling và media transport trong topology ứng viên."
+    },
+    {
+      "ids": "V1.2.6 V1.2.7 V1.2.8 V1.3.8 V1.3.9 V1.3.11 V6.8.3",
+      "evidence": "protocol",
+      "next": "Đối chiếu lại các quyết định theo giao thức và kiểm realm đang chạy sau thay đổi adapter, bundle, cấu hình federation hoặc cơ chế gửi thư."
+    }
+  ],
+  "gaps": [
+    {
+      "ids": "V3.4.1",
+      "evidence": "httpsHeaders",
+      "next": "Bổ sung includeSubDomains cho HSTS và kiểm header một năm trên phản hồi thành công/lỗi ở cả BFF, LMS, ingress và IdP."
+    },
+    {
+      "ids": "V12.3.1 V12.3.3",
+      "evidence": "internalTransport",
+      "next": "Mã hóa mọi kết nối nghiệp vụ tới PostgreSQL và hop HTTP nội bộ. Kiểm chứng từ chối plaintext và CA sai theo workload."
+    },
+    {
+      "ids": "V5.4.3",
+      "evidence": "files",
+      "next": "Tích hợp scanner AV và kiểm từ chối tải xuống khi scan lỗi hoặc phát hiện mẫu kiểm chuẩn. Kiểm MIME, signature và quarantine hiện có chưa cung cấp bằng chứng AV."
+    },
+    {
+      "ids": "V13.3.1",
+      "evidence": "topology",
+      "next": "Chọn cơ chế secrets cho staging, giới hạn đọc theo workload và diễn tập rotation. Runner hiện tạo tệp thử theo slot và không đưa chúng vào artifact."
+    },
+    {
+      "ids": "V3.5.4",
+      "evidence": "topology",
+      "next": "Các client staging dùng cùng IP với cổng khác nhau. Kiểm hostname riêng cho từng ứng dụng và cách ly cookie qua luồng SSO/backchannel."
+    },
+    {
+      "ids": "V11.2.3",
+      "evidence": "crypto",
+      "next": "Chứng chỉ staging và fixture xoay khóa dùng RSA 2048. Nâng kích thước theo yêu cầu 128 bit và xác nhận lại khóa IdP, TLS, rotation và restore."
+    },
+    {
+      "ids": "V6.2.1 V6.2.4 V6.2.11 V6.2.12 V6.3.1",
+      "evidence": "iam",
+      "next": "Realm staging chưa cấu hình tường minh độ dài, danh sách mật khẩu phổ biến/rò rỉ, từ cấm và chống brute force. Mật khẩu fixture do runner sinh ngẫu nhiên. Cần kiểm policy trên luồng người dùng đặt mật khẩu."
+    }
+  ],
+  "partial": [
+    {
+      "ids": "V3.5.5",
+      "evidence": "protocol",
+      "next": "Áp dụng cho YouTube IFrame API và Vimeo Player SDK trong LMS. Xác minh phiên bản SDK thực tế và hành vi từ chối thông điệp sai origin, sai iframe hoặc sai cấu trúc. Đối chiếu ảnh hưởng tới tiến độ và vòng đời player sau khi đóng bài học."
+    },
+    {
+      "ids": "V6.5.2 V6.5.4",
+      "evidence": "mfaRecovery",
+      "next": "Đối chiếu secret lookup và mã khôi phục theo từng loại đang bật. Flow staging yêu cầu TOTP và diễn tập mất thiết bị dùng quản trị dự phòng. Xác nhận required action và các loại credential thực tế tại Keycloak trước khi chốt phạm vi."
+    },
+    {
+      "ids": "V6.6.1 V6.6.2 V6.6.3",
+      "evidence": "iam",
+      "next": "Realm import staging tắt tự đặt lại mật khẩu và yêu cầu TOTP. Đối chiếu cấu hình reset flow, authenticator và SMTP tại realm đang chạy để quyết định phạm vi mã gửi qua điện thoại, email hoặc kênh khác."
+    },
+    {
+      "ids": "V1.1.1 V1.2.2 V1.2.3 V1.2.9 V1.3.1 V1.3.3 V1.3.4 V1.3.5 V1.3.7 V1.3.10",
+      "evidence": "encoding",
+      "next": "Đã đối chiếu các bề mặt URL video, tên tệp, output template và CSV. Lập bản đồ điểm giải mã, dữ liệu đầu vào tới trình diễn giải và phép thử encoding theo từng ngữ cảnh của ứng viên."
+    },
+    {
+      "ids": "V1.2.4 V1.5.2 V2.1.1 V2.1.2 V2.1.3",
+      "evidence": "schema",
+      "next": "Đã thấy schema JSON có phiên bản, trường cho phép, giới hạn và kiểm tương quan ở Forms/Quy trình, cùng truy vấn PostgreSQL tham số hóa. Rà toàn bộ truy vấn dựng động, D1, bảng tính và tài liệu giới hạn theo route."
+    },
+    {
+      "ids": "V1.2.5 V1.3.6 V1.4.1 V1.4.2 V1.4.3 V2.4.1",
+      "evidence": "dependencies",
+      "next": "Đã thấy kiểm origin OIDC, giới hạn HTTP BFF và giới hạn kích thước file. Đối chiếu allowlist outbound, cách ly công cụ vận hành, quyền và quota theo người/tenant, lifecycle tài nguyên và phần native của workload."
+    },
+    {
+      "ids": "V1.5.1",
+      "evidence": "files",
+      "next": "Foundation và LMS đọc bảng tính sau kiểm ZIP trên XLSX. Đối chiếu tùy chọn parser và xử lý thực thể XML bên ngoài trên hai đường nhập."
+    },
+    {
+      "ids": "V4.2.1",
+      "evidence": "ingress",
+      "next": "BFF staging dùng HTTP parser của Node và ingress lọc hop-by-hop headers. Kiểm chính sách framing và hành vi từ chối request không hợp lệ trên mọi hop BFF, workerd và Keycloak."
+    },
+    {
+      "ids": "V6.8.1 V10.2.2",
+      "evidence": "oidc",
+      "next": "Mỗi client staging ghim một issuer, còn Foundation lưu cặp issuer và subject. Xác nhận realm đang chạy và hành vi khi đưa thêm identity provider hoặc authorization server."
+    },
+    {
+      "ids": "V15.1.1 V15.2.1",
+      "evidence": "artifact",
+      "next": "Runbook quy định cách tính hạn xử lý. Đối chiếu tuổi và advisory theo từng digest của cả workload hỗ trợ, bản lùi và ứng viên, kể cả thành phần ngoài npm registry."
+    },
+    {
+      "ids": "V14.1.1 V14.1.2 V14.2.4",
+      "evidence": "dataProtection",
+      "next": "Có phân loại theo owner, mã hóa phiên, scope dữ liệu và retention audit thử. Hoàn chỉnh kiểm kê cấp trường, chính sách lưu giữ và bằng chứng mã hóa kho/backup."
+    },
+    {
+      "ids": "V6.1.1 V6.1.2 V6.1.3 V6.2.2 V6.2.3 V6.2.5 V6.2.6 V6.2.7 V6.2.8 V6.2.9 V6.2.10 V6.3.2 V6.3.4 V6.4.1 V6.4.2 V6.4.3 V6.5.1 V6.5.3 V6.5.5",
+      "evidence": "iam",
+      "next": "Realm staging có mật khẩu và OTP, chỉ cấu hình client confidential, tắt đăng ký và direct grant. Đối chiếu Account Console, policy mật khẩu/khôi phục, vòng đời bootstrap và hành vi thực tế với OTP đã dùng hoặc hết hạn."
+    },
+    {
+      "ids": "V10.3.2 V10.4.2 V10.4.3 V10.4.5 V10.4.7 V10.4.8 V10.4.9 V10.6.2 V10.7.1 V10.7.2 V10.7.3",
+      "evidence": "oidc",
+      "next": "Có PKCE, client confidential và đối chiếu audience/quyền nguồn. Kiểm chính sách tuổi mã, rotation, consent, đăng ký và thu hồi qua realm chạy thực tế."
+    },
+    {
+      "ids": "V12.1.2 V12.1.3 V12.2.2",
+      "evidence": "internalTransport",
+      "next": "Đã đo TLS giữa các thành phần staging với CA theo slot. Ghi cipher, xác nhận áp dụng mTLS và đối chiếu biên public certificate theo topology thử."
+    },
+    {
+      "ids": "V3.2.1 V3.4.2 V3.5.2 V3.5.3 V3.7.1 V3.7.2",
+      "evidence": "browser",
+      "next": "Đối chiếu CSP, Content-Disposition, route mutation, Origin và CSRF. Xác nhận áp dụng CORS/preflight, kiểm allowlist redirect và cơ chế nhúng video trên artifact."
+    },
+    {
+      "ids": "V7.1.2 V7.5.2",
+      "evidence": "sessionPolicy",
+      "next": "Đối chiếu số phiên theo account/client, quyết định giới hạn và thử giao diện quản lý phiên qua Keycloak sau xác thực lại."
+    },
+    {
+      "ids": "V11.1.1 V11.1.2 V11.2.1 V11.2.2 V11.3.1 V11.4.1 V11.4.2 V11.4.3 V11.4.4 V11.6.1",
+      "evidence": "crypto",
+      "next": "Có AES-GCM, SHA-256/HMAC, HKDF và thư viện JOSE. Lập inventory theo mục đích, policy lifecycle, cấu hình mật khẩu Keycloak và phương án đổi khóa mã hóa có kiểm chứng."
+    },
+    {
+      "ids": "V14.2.1 V14.2.2 V14.2.3 V14.3.1 V14.3.3",
+      "evidence": "browser",
+      "next": "Rà search/URL, cache, redirect, logout và lưu trữ trình duyệt. Portal có đích tiếp tục đăng nhập trong sessionStorage và Công việc lưu tùy chọn theo account, tenant và dự án."
+    },
+    {
+      "ids": "V15.1.3 V15.2.2 V15.2.3 V15.3.2 V15.3.7",
+      "evidence": "dependencies",
+      "next": "Đối chiếu timeout, giới hạn tài nguyên, route và dependency của image, redirect outbound và vị trí tham số được phép. Xác nhận runtime qua profile staging."
+    },
+    {
+      "ids": "V4.1.1 V4.1.2",
+      "evidence": "ingress",
+      "next": "Đã có HTTPS listener và content type theo JSON, media và assets. Kiểm thêm response lỗi/redirect và quy tắc charset ở từng loại nội dung."
+    },
+    {
+      "ids": "V5.1.1 V5.2.3 V5.3.1",
+      "evidence": "files",
+      "next": "Đối chiếu giới hạn theo tính năng. ZIP đã có giới hạn số entry và byte sau giải nén. Media LMS và tệp Quy trình dùng kho nghiệp vụ riêng, cần kiểm mọi đường import và tải."
+    },
+    {
+      "ids": "V13.2.1 V13.2.2 V13.2.3 V13.2.4 V13.2.5 V13.3.2 V13.4.2 V13.4.3 V13.4.4 V13.4.5",
+      "evidence": "topology",
+      "next": "Kiểm credential và quyền theo workload, allowlist outbound, cấu hình debug và các endpoint vận hành. Staging có role riêng, chứng chỉ theo slot và cấu hình Worker giới hạn đích."
+    },
+    {
+      "ids": "V1.1.2 V1.2.1 V3.2.2",
+      "evidence": "encoding",
+      "next": "Rà các ngữ cảnh render text, HTML in, header và export. Đối chiếu cả Workflow, LMS và Forms."
+    },
+    {
+      "ids": "V1.3.2 V2.2.1 V2.2.2 V2.2.3",
+      "evidence": "schema",
+      "next": "Đối chiếu schema và validator nghiệp vụ ở các entry point trên ứng viên, kể cả API tích hợp."
+    },
+    {
+      "ids": "V2.3.1 V2.3.2 V2.3.3 V2.3.4",
+      "evidence": "transactions",
+      "next": "Đo CAS, replay, giới hạn và rollback khi audit thất bại trên các luồng ghi trong từng module."
+    },
+    {
+      "ids": "V3.3.1 V3.3.2 V3.3.3 V3.3.4",
+      "evidence": "browser",
+      "next": "Kiểm đủ thuộc tính và đường phát hành cookie session, callback và logout tại mọi client, Worker và IdP."
+    },
+    {
+      "ids": "V3.4.3 V3.4.4 V3.4.5 V3.4.6",
+      "evidence": "httpsHeaders",
+      "next": "Kiểm header qua TLS trên tài nguyên tĩnh, route ứng dụng, lỗi BFF, lỗi Worker và lỗi tại ingress."
+    },
+    {
+      "ids": "V3.5.1",
+      "evidence": "browser",
+      "next": "Kiểm CSRF và Origin ở mọi phương thức ghi dùng cookie, gồm cấu hình, upload và logout."
+    },
+    {
+      "ids": "V4.1.3 V15.3.4",
+      "evidence": "ingress",
+      "next": "Đối chiếu ranh giới proxy tin cậy, metadata ingress và địa chỉ nguồn qua cả BFF và workerd."
+    },
+    {
+      "ids": "V5.2.1 V5.2.2 V5.3.2 V5.4.1 V5.4.2",
+      "evidence": "files",
+      "next": "Kiểm giới hạn, format, object key và header tải tệp theo từng kho, cả trường hợp bị từ chối."
+    },
+    {
+      "ids": "V6.3.3 V6.8.4 V10.3.4",
+      "evidence": "iam",
+      "next": "Kiểm mức, phương thức và độ mới xác thực trên từng client theo quyền được cấp."
+    },
+    {
+      "ids": "V6.4.4 V7.4.3 V7.5.1",
+      "evidence": "mfaRecovery",
+      "next": "Đối chiếu bằng chứng xác minh danh tính khi mất MFA và kiểm yêu cầu xác thực lại, kết thúc phiên khi đổi yếu tố."
+    },
+    {
+      "ids": "V6.8.2 V9.1.1 V9.1.2 V9.1.3 V9.2.1 V9.2.2 V9.2.3 V10.3.1",
+      "evidence": "tokens",
+      "next": "Chạy với Keycloak thật trên ứng viên. Ghi nguồn khóa, thuật toán, loại, audience và biên thời hạn trên từng đường nhận token."
+    },
+    {
+      "ids": "V7.1.1 V7.1.3 V7.3.1 V7.3.2 V7.6.1",
+      "evidence": "sessionPolicy",
+      "next": "Đối chiếu rủi ro và thời hạn, đo idle/absolute timeout, logout và xác thực lại tại IdP, BFF và LMS."
+    },
+    {
+      "ids": "V7.2.1 V7.2.2 V7.2.3 V7.2.4",
+      "evidence": "sessions",
+      "next": "Đối chiếu nguồn ngẫu nhiên, entropy, token chỉ xử lý ở backend và thay token khi đăng nhập lại."
+    },
+    {
+      "ids": "V7.4.1 V7.4.2",
+      "evidence": "personnel",
+      "next": "Đo kết thúc phiên ở tất cả client khi logout, hết hạn và khóa hoặc xóa tài khoản theo chính sách."
+    },
+    {
+      "ids": "V7.4.4 V7.6.2",
+      "evidence": "browser",
+      "next": "Kiểm nút đăng nhập, hành động khởi tạo phiên và thao tác đăng xuất trên mọi màn bảo vệ của năm ứng dụng."
+    },
+    {
+      "ids": "V7.4.5",
+      "evidence": "iam",
+      "next": "Kiểm quản trị kết thúc phiên theo người và toàn hệ thống trong phạm vi cấp quyền."
+    },
+    {
+      "ids": "V8.1.1 V8.1.2",
+      "evidence": "accessMatrix",
+      "next": "Hoàn chỉnh tài liệu quyền chức năng, đối tượng và trường đọc/ghi theo trạng thái và scope."
+    },
+    {
+      "ids": "V8.2.1 V8.2.2 V8.2.3 V8.3.1 V8.4.1 V15.3.1",
+      "evidence": "access",
+      "next": "Chạy đủ ma trận UI/API của Portal, Forms, Quy trình, Công việc và LMS trên ứng viên, kể cả sau đổi quyền."
+    },
+    {
+      "ids": "V9.2.4 V10.2.1 V10.4.1 V10.4.4 V10.4.6 V10.4.10 V10.4.11 V10.5.1 V10.5.4 V10.6.1",
+      "evidence": "oidc",
+      "next": "Đối chiếu cấu hình Keycloak và hành vi token/callback thực tế cho từng client, gồm audience, PKCE, nonce, grant, scope và callback."
+    },
+    {
+      "ids": "V10.1.1 V10.1.2 V10.3.3 V10.5.2 V10.5.3",
+      "evidence": "sessions",
+      "next": "Đối chiếu ranh giới BFF, Worker, IdP và adapter về lưu/chuyển token, binding giao dịch, issuer và subject."
+    },
+    {
+      "ids": "V10.5.5",
+      "evidence": "tokens",
+      "next": "Đối chiếu JOSE typ logout+jwt, claim sự kiện, nonce vắng mặt và tuổi token. Payload typ=Logout mới là một phần."
+    },
+    {
+      "ids": "V11.3.2 V11.3.3 V11.5.1",
+      "evidence": "crypto",
+      "next": "Kiểm danh mục mã hóa xác thực và nguồn entropy cho BFF, LMS, Keycloak và credentials staging."
+    },
+    {
+      "ids": "V12.1.1 V12.2.1 V12.3.2 V12.3.4",
+      "evidence": "ingress",
+      "next": "Đo TLS ưu tiên và xác minh CA trên mọi kết nối, kể cả IdP, audit và kho nghiệp vụ."
+    },
+    {
+      "ids": "V13.1.1",
+      "evidence": "topology",
+      "next": "Hoàn chỉnh inventory từng kết nối, cổng, mục đích, lớp xác thực và owner của ứng viên."
+    },
+    {
+      "ids": "V13.4.1 V15.1.2",
+      "evidence": "artifact",
+      "next": "Đối chiếu SBOM và metadata của image cuối, gồm hạ tầng pin, BFF và Worker."
+    },
+    {
+      "ids": "V14.3.2",
+      "evidence": "httpsHeaders",
+      "next": "Kiểm no-store ở mọi phản hồi có dữ liệu nhạy cảm, cả lỗi và download qua các proxy."
+    },
+    {
+      "ids": "V15.3.3 V15.3.5 V15.3.6",
+      "evidence": "schema",
+      "next": "Kiểm allowlist field, kiểu và giới hạn khi parse JSON, tài liệu cấu hình, API và dữ liệu bảng tính."
+    },
+    {
+      "ids": "V16.1.1 V16.2.1 V16.2.3 V16.2.4 V16.2.5 V16.4.1 V16.4.2 V16.4.3",
+      "evidence": "audit",
+      "next": "Đối chiếu inventory, correlation, che dữ liệu, chống sửa, truyền và retention ở từng nguồn. Kiểm lỗi delivery và hệ phân tích tách riêng."
+    },
+    {
+      "ids": "V16.2.2",
+      "evidence": "audit",
+      "next": "Đo độ lệch đồng hồ host, Keycloak, BFF, PostgreSQL, workerd và collector, kiểm UTC hoặc offset ở log gốc."
+    },
+    {
+      "ids": "V16.3.1 V16.3.2 V16.3.3 V16.3.4",
+      "evidence": "audit",
+      "next": "Kiểm độ phủ lỗi auth, deny, validation, giới hạn và lỗi TLS/phụ thuộc ở mỗi lớp, gồm workerd."
+    },
+    {
+      "ids": "V16.5.1 V16.5.2 V16.5.3",
+      "evidence": "dependencies",
+      "next": "Đối chiếu lỗi tổng quát, trạng thái sau lỗi phụ thuộc và rollback/fail-closed qua BFF, Worker, ingress, storage."
+    }
+  ],
+  "sections": {
+    "V1.1": "Lập bản đồ decode và encode tại HTTP, UI, render in, ZIP và export.",
+    "V1.2": "Đối chiếu ngữ cảnh đưa dữ liệu vào URL, SQL, biểu thức hoặc interpreter và xác minh interpreter thực sự dùng.",
+    "V1.3": "Kiểm đường vào HTML, SVG, template, URL outbound và mail. Xác nhận có hay không từng công nghệ điều kiện.",
+    "V1.4": "Kiểm bounds số, bộ nhớ và tài nguyên runtime, gồm parser ZIP/XLSX và media.",
+    "V1.5": "Đối chiếu parser JSON, XML và archive với kiểu, giới hạn và dữ liệu được phép.",
+    "V2.1": "Ghi rules theo trường, ngữ cảnh và giới hạn nghiệp vụ theo người dùng/toàn hệ thống.",
+    "V2.4": "Đo các giới hạn endpoint tốn tài nguyên và nghiệp vụ theo actor trong staging.",
+    "V3.2": "Kiểm định dạng, disposition và ngữ cảnh mở trực tiếp của API và tệp tải.",
+    "V3.4": "Đối chiếu header bảo mật trên từng loại response và origin được hỗ trợ.",
+    "V3.5": "Đối chiếu hostname theo module, phương thức ghi, cơ chế chống CSRF và postMessage nếu có.",
+    "V3.7": "Lập inventory công nghệ client và mọi redirect tự động khác origin.",
+    "V4.1": "Đối chiếu Content-Type, redirect và header tin cậy qua BFF/Worker/ingress.",
+    "V4.2": "Đối chiếu cách parse và ranh giới message HTTP giữa ingress, BFF và workerd.",
+    "V5.1": "Ghi loại, phần mở rộng và kích thước tối đa của mọi đường nhập/tải file.",
+    "V5.2": "Kiểm archive bounds và quy tắc xử lý file theo từng loại.",
+    "V5.3": "Xác minh ownership và cách tách kho file khỏi executable/public assets.",
+    "V5.4": "Đối chiếu chính sách scan/quarantine và cổng đọc file nguồn.",
+    "V6.1": "Ghi chính sách xác thực Keycloak, giới hạn, từ cấm và mọi đường xác thực.",
+    "V6.2": "Đối chiếu từng điều kiện mật khẩu ở Keycloak gồm đổi mật khẩu, độ dài, từ cấm và dữ liệu rò rỉ.",
+    "V6.3": "Đối chiếu brute force, tài khoản mặc định và các đường xác thực ở IdP/client.",
+    "V6.4": "Kiểm cấp, đổi, mất và khôi phục từng yếu tố xác thực theo runbook Keycloak.",
+    "V6.5": "Đối chiếu entropy, tuổi, lưu trữ, sử dụng một lần và chống đoán với yếu tố thực sự bật.",
+    "V6.6": "Xác định có hay không cơ chế ngoài băng. Nếu có, kiểm binding, entropy và giới hạn theo kênh.",
+    "V6.8": "Đối chiếu từng IdP và giao thức assertion. Ghi quyết định riêng cho SAML và mô hình một IdP.",
+    "V7.1": "Chốt số phiên song song theo account/client và hành vi khi đạt giới hạn.",
+    "V7.5": "Kiểm người dùng xem và kết thúc phiên hiện hành sau xác thực lại.",
+    "V10.2": "Đối chiếu có hay không nhiều authorization server và cơ chế binding issuer.",
+    "V10.3": "Đối chiếu scope/claims ủy quyền với grant hiện hành ở resource server.",
+    "V10.4": "Đối chiếu Keycloak grant, refresh, revocation, code lifetime và dynamic registration thực tế.",
+    "V10.6": "Đối chiếu logout ở Keycloak, xác nhận người dùng hoặc tham số logout đã xác minh.",
+    "V10.7": "Đối chiếu chính sách consent của confidential client và giao diện quản lý consent trong Keycloak.",
+    "V11.1": "Hoàn tất inventory khóa và lifecycle, gồm lưu trữ, thay, hủy và backup.",
+    "V11.2": "Kiểm thư viện, cách đổi primitive và mức an toàn của từng primitive.",
+    "V11.3": "Kiểm toàn bộ chế độ mã hóa/padding theo mục đích trong danh mục crypto.",
+    "V11.4": "Đối chiếu hash, MAC/KDF và cấu hình lưu mật khẩu của Keycloak.",
+    "V11.6": "Đối chiếu thuật toán sinh khóa và entropy cho TLS, Keycloak và gói ứng dụng.",
+    "V12.1": "Ghi cipher/protocol thực tế và quyết định áp dụng mTLS theo kết nối.",
+    "V12.2": "Xác định phạm vi certificate công khai dựa trên topology và trust boundary.",
+    "V13.2": "Rà xác thực, credential riêng và allowlist inbound/outbound từng backend.",
+    "V13.3": "Kiểm kho bí mật và quyền đọc theo tiến trình, vai trò và môi trường.",
+    "V13.4": "Kiểm cấu hình debug, directory listing, phương thức TRACE và bề mặt docs/monitoring.",
+    "V14.1": "Phân loại dữ liệu theo owner và mức bảo vệ, ghi yêu cầu theo loại.",
+    "V14.2": "Đối chiếu URL, caching, chia sẻ dữ liệu, mã hóa và lưu giữ theo từng lớp.",
+    "V14.3": "Kiểm DOM và storage phía trình duyệt sau logout/hết phiên và khả năng lộ dữ liệu.",
+    "V15.1": "Ghi thời hạn xử lý dependency và inventory thao tác tốn tài nguyên.",
+    "V15.2": "Đối chiếu policy cập nhật, thành phần tối thiểu và ngưỡng bão hòa dưới tải.",
+    "V15.3": "Kiểm redirect outbound và xử lý tham số trùng giữa các lớp HTTP."
+  }
+}

@@ -1,6 +1,6 @@
 # Goal — Hoàn thiện TLQM AIO Foundation MVP local
 
-Trạng thái: **bản goal để người dùng kích hoạt**. Việc lưu file này không tự kích hoạt Goal và không mở rộng quyền cho remote/production.
+Trạng thái: **đã nghiệm thu Foundation MVP local ngày 10/11/2026** — [đối chiếu mười tiêu chí](../docs/FOUNDATION_ACCEPTANCE.md). Theo dõi tại [FOUNDATION_PROGRESS](FOUNDATION_PROGRESS.md). Phạm vi goal không mở rộng quyền cho remote/production.
 
 ## Mục tiêu
 

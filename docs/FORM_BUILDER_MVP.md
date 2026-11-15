@@ -1,6 +1,6 @@
 # AIO Forms — Form Builder MVP
 
-Ngày: 09/11/2026. Trạng thái: **ưu tiên người dùng đã chốt; thiết kế dưới đây là đề xuất**.
+Ngày: 09/11/2026. Trạng thái: **đã đạt baseline MVP local**; [đối chiếu nghiệm thu](FORMS_ACCEPTANCE.md) ghi bằng chứng và giới hạn. Chưa production.
 
 ## Mục tiêu giai đoạn đầu
 
@@ -23,7 +23,7 @@ Form Builder và tích hợp LMS là hai ưu tiên ứng dụng sau Foundation; 
 | Báo cáo | Danh sách, số đã gửi theo đơn vị, tổng hợp câu hỏi và export CSV theo quyền |
 | Audit | Ai tạo/sửa/publish/close, ai gửi và ai export |
 
-Đây là baseline để triển khai sau; chưa có builder nào được tạo/chạy trong Master Project.
+Đã có DSL/storage/service/API, client SSO Forms, role fixtures và UI shadcn trong Master Project. Domain/HTTP/UI và full gate local đã pass. Module [Quy trình](WORKFLOWS_ACCEPTANCE.md) mới tái sử dụng schema/interpreter/designer/renderer như thư viện code, giữ dữ liệu trong database riêng; không đổi trạng thái hoặc lịch sử phiếu Forms đã gửi. Xem [runbook và giới hạn](FORMS_LOCAL_DEVELOPMENT.md), [tiến độ](../roadmap/FORMS_LMS_PROGRESS.md).
 
 Ngoài MVP: public anonymous forms, chữ ký số, thanh toán, upload file, công thức chạy code, workflow duyệt nhiều cấp, marketing automation, dashboard BI và AI tự sinh quy trình. Nếu bổ sung upload về sau cần quy định storage, loại/kích thước file và quyền tải riêng.
 
@@ -72,7 +72,7 @@ Nguồn gốc: `D:/thanhnx/OpenCode/BOS/bos-workspace`. Đây là thành phần 
 | Tách thành package | Có thể dùng renderer/designer chung | Đo dependencies, license, entrypoints, test và ownership trước |
 | Xây module Forms tối thiểu theo hợp đồng riêng | Chủ động phạm vi MVP và version contract | Có chi phí triển khai; chỉ tái sử dụng phần đã chứng minh tách được |
 
-**Đề xuất:** spike tái sử dụng có timebox trước khi chọn phương án. Ưu tiên tận dụng thành phần phù hợp, không sao chép toàn bộ core BOS vào AIO. Không có thao tác tách/copy code trong đợt tài liệu này.
+**Quyết định sau spike source:** module Forms riêng, không copy code BOS. Dependencies Nest/Prisma/governance/EntityVersion và Ant Design không phù hợp module khảo sát shadcn tối thiểu. Bằng chứng revision/dirty và quyết định tại [ADR 0003](decisions/0003-forms-isolated-module.md).
 
 ## Nghiệm thu nghiệp vụ
 

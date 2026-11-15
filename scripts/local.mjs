@@ -27,6 +27,7 @@ if (command === 'prepare') {
   const clients = [
     { code: 'aio-foundation', name: 'AIO Foundation', port: 4100 },
     { code: 'aio-probe', name: 'SSO client B', port: 4101 },
+    { code: 'aio-cms', name: 'AIO CMS', port: 4107 },
   ].map((item) => ({
     ...item,
     baseUrl: 'http://127.0.0.1:' + item.port,
@@ -195,6 +196,12 @@ if (command === 'prepare') {
       { cwd: root, stdio: 'inherit', windowsHide: true },
     );
     if (configure.status !== 0) process.exit(configure.status ?? 1);
+    const theme = spawnSync(
+      process.execPath,
+      ['--import', 'tsx', join(root, 'scripts/sso-theme.ts'), 'ensure'],
+      { cwd: root, stdio: 'inherit', windowsHide: true },
+    );
+    if (theme.status !== 0) process.exit(theme.status ?? 1);
     console.log('Local Keycloak ready at http://127.0.0.1:8180. Next: npm run db:setup');
   }
 }

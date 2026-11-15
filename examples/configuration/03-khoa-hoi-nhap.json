@@ -1,0 +1,63 @@
+{
+  "format": "tlqm-aio-configuration",
+  "version": 1,
+  "kind": "lms-course",
+  "label": "Hội nhập TLQM AIO — mẫu thử",
+  "createdAt": "2026-11-10T23:02:14.813Z",
+  "content": {
+    "schemaVersion": 3,
+    "policy": {
+      "passScore": 80,
+      "maxAttempts": 3,
+      "cooldownMinutes": 0,
+      "requireVideoCompletion": true,
+      "checkpointPolicy": "none",
+      "prerequisiteVersionIds": []
+    },
+    "title": "Hội nhập TLQM AIO — mẫu thử",
+    "subtitle": "Nội dung giả lập để thử video và bài thi. Hồ sơ chỉ thay đổi sau khi HR xác nhận áp dụng; hoàn thành quy trình không tự cấp quyền ứng dụng.",
+    "series": "Hội nhập TLQM",
+    "duration": 2,
+    "video": {
+      "kind": "file",
+      "id": "ffffffff-ffff-4fff-8fff-000000000003"
+    },
+    "deadline": "",
+    "isMandatory": true,
+    "audienceUnits": [
+      "ffffffff-ffff-4fff-8fff-000000000001"
+    ],
+    "checkpoints": [],
+    "questions": [
+      {
+        "id": "q1",
+        "type": "single",
+        "question": "Sau khi quy trình cập nhật hồ sơ được duyệt, bước tiếp theo là gì?",
+        "options": [
+          "HR kiểm tra và xác nhận áp dụng",
+          "Tự cấp vai trò ứng dụng",
+          "Xóa hồ sơ cũ"
+        ]
+      }
+    ],
+    "answerKey": {
+      "q1": {
+        "answer": 0,
+        "explanation": "HR đối soát phiên bản và quyền hiện hành rồi xác nhận áp dụng."
+      }
+    },
+    "attachments": []
+  },
+  "references": [
+    {
+      "type": "unit",
+      "id": "ffffffff-ffff-4fff-8fff-000000000001",
+      "label": "Đơn vị áp dụng mẫu"
+    },
+    {
+      "type": "media",
+      "id": "ffffffff-ffff-4fff-8fff-000000000003",
+      "label": "Video minh họa TLQM đã tải lên"
+    }
+  ]
+}

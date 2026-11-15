@@ -1,0 +1,7 @@
+{
+  "version": 2,
+  "kind": "application",
+  "code": "aio-forms",
+  "name": "AIO Forms",
+  "port": 4103
+}

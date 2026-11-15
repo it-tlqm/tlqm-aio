@@ -1,0 +1,230 @@
+{
+  "conditionCases": [
+    {
+      "name": "nested-and-or-numeric-coercion",
+      "condition": {
+        "schemaVersion": 1,
+        "logicalOperator": "AND",
+        "rules": [
+          {
+            "fieldCode": "service_type",
+            "operator": "EQUALS",
+            "value": "XNK"
+          },
+          {
+            "logicalOperator": "OR",
+            "rules": [
+              {
+                "fieldCode": "priority",
+                "operator": "GREATER_THAN_OR_EQUAL",
+                "value": "10"
+              },
+              {
+                "fieldCode": "vip",
+                "operator": "EQUALS",
+                "value": true
+              }
+            ]
+          }
+        ]
+      },
+      "context": {
+        "service_type": "XNK",
+        "priority": 10,
+        "vip": false
+      },
+      "fieldDefinitions": [
+        {
+          "code": "service_type",
+          "type": "SELECT"
+        },
+        {
+          "code": "priority",
+          "type": "NUMBER"
+        },
+        {
+          "code": "vip",
+          "type": "CHECKBOX"
+        }
+      ],
+      "expected": true
+    },
+    {
+      "name": "zero-and-false-are-not-empty",
+      "condition": {
+        "schemaVersion": 1,
+        "logicalOperator": "AND",
+        "rules": [
+          {
+            "fieldCode": "quantity",
+            "operator": "IS_NOT_EMPTY"
+          },
+          {
+            "fieldCode": "enabled",
+            "operator": "EQUALS",
+            "value": false
+          }
+        ]
+      },
+      "context": {
+        "quantity": 0,
+        "enabled": false
+      },
+      "fieldDefinitions": [
+        {
+          "code": "quantity",
+          "type": "NUMBER"
+        },
+        {
+          "code": "enabled",
+          "type": "CHECKBOX"
+        }
+      ],
+      "expected": true
+    },
+    {
+      "name": "date-calendar-order",
+      "condition": {
+        "schemaVersion": 1,
+        "logicalOperator": "AND",
+        "rules": [
+          {
+            "fieldCode": "eta",
+            "operator": "LESS_THAN",
+            "value": "2026-07-29"
+          }
+        ]
+      },
+      "context": {
+        "eta": "2026-07-28"
+      },
+      "fieldDefinitions": [
+        {
+          "code": "eta",
+          "type": "DATE"
+        }
+      ],
+      "expected": true
+    },
+    {
+      "name": "case-sensitive-string",
+      "condition": {
+        "schemaVersion": 1,
+        "logicalOperator": "AND",
+        "rules": [
+          {
+            "fieldCode": "plate",
+            "operator": "EQUALS",
+            "value": "29A12345"
+          }
+        ]
+      },
+      "context": {
+        "plate": "29a12345"
+      },
+      "fieldDefinitions": [
+        {
+          "code": "plate",
+          "type": "TEXT"
+        }
+      ],
+      "expected": false
+    },
+    {
+      "name": "typed-in-array",
+      "condition": {
+        "schemaVersion": 1,
+        "logicalOperator": "AND",
+        "rules": [
+          {
+            "fieldCode": "priority",
+            "operator": "IN",
+            "value": ["1", "2", "3"]
+          }
+        ]
+      },
+      "context": {
+        "priority": 2
+      },
+      "fieldDefinitions": [
+        {
+          "code": "priority",
+          "type": "NUMBER"
+        }
+      ],
+      "expected": true
+    },
+    {
+      "name": "multi-select-exact-membership",
+      "condition": {
+        "schemaVersion": 1,
+        "logicalOperator": "AND",
+        "rules": [
+          {
+            "fieldCode": "service_options",
+            "operator": "CONTAINS",
+            "value": "YMS_INTERNAL_OPS"
+          }
+        ]
+      },
+      "context": {
+        "service_options": ["YMS_INTERNAL_OPS"]
+      },
+      "fieldDefinitions": [
+        {
+          "code": "service_options",
+          "type": "MULTI_SELECT"
+        }
+      ],
+      "expected": true
+    },
+    {
+      "name": "multi-select-does-not-use-substring-matching",
+      "condition": {
+        "schemaVersion": 1,
+        "logicalOperator": "AND",
+        "rules": [
+          {
+            "fieldCode": "service_options",
+            "operator": "CONTAINS",
+            "value": "YMS_INTERNAL_OPS"
+          }
+        ]
+      },
+      "context": {
+        "service_options": ["YMS_INTERNAL_OPS_OLD"]
+      },
+      "fieldDefinitions": [
+        {
+          "code": "service_options",
+          "type": "MULTI_SELECT"
+        }
+      ],
+      "expected": false
+    },
+    {
+      "name": "multi-select-not-contains-empty-selection",
+      "condition": {
+        "schemaVersion": 1,
+        "logicalOperator": "AND",
+        "rules": [
+          {
+            "fieldCode": "service_options",
+            "operator": "NOT_CONTAINS",
+            "value": "YMS_CUSTOMS_GET_IN_OUT"
+          }
+        ]
+      },
+      "context": {
+        "service_options": []
+      },
+      "fieldDefinitions": [
+        {
+          "code": "service_options",
+          "type": "MULTI_SELECT"
+        }
+      ],
+      "expected": true
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "version": 2,
+  "kind": "application",
+  "code": "aio-tasks",
+  "name": "AIO Công việc",
+  "port": 4106
+}

@@ -1,0 +1,7 @@
+{
+  "upstreamCommit": "9e0a0d3c3504a0a00b45e61355afac5e35c78379",
+  "version": "2.7.2",
+  "profile": "aio-windows-amd64",
+  "binarySha256": "e0ffffc8450a1336e5ebdc85e94ebbc0de89f253d39cd3bc59262e0f6e1a926c",
+  "patchSha256": "1e15d188ca5b2d92674c55545705170682fec2bae6be108a4b969f35fd1773f6"
+}

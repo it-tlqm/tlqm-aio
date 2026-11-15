@@ -8,7 +8,7 @@ for (const client of config.clients) {
   ).json()) as { id: string; clientId: string }[];
   const record = records.find((value) => value.clientId === client.clientId);
   if (!record) throw new Error('Expected local client is missing.');
-  await request('/clients/' + record.id, 'PUT', { fullScopeAllowed: false });
+  await request('/clients/' + record.id, 'PUT', { fullScopeAllowed: false, webOrigins: [] });
   const mappers = (await (
     await request('/clients/' + record.id + '/protocol-mappers/models')
   ).json()) as { id: string; name: string; config: Record<string, string> }[];

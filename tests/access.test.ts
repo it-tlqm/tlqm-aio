@@ -1,6 +1,9 @@
 import { after, before, test } from 'node:test';
 import assert from 'node:assert/strict';
 import pg from 'pg';
+import { randomUUID } from 'node:crypto';
+import { GovernanceService } from '../src/management/governance.js';
+import type { Identity } from '../src/store.js';
 import { loadLocalConfig, testDatabaseUrl, assertLocalDatabase } from '../src/config.js';
 import { Store } from '../src/store.js';
 import { ids } from '../src/fixtures.js';
@@ -10,7 +13,38 @@ const databaseUrl = testDatabaseUrl(config);
 assertLocalDatabase(databaseUrl, true);
 const pool = new pg.Pool({ connectionString: databaseUrl, max: 2 });
 const store = new Store(pool);
-const identity = (subject: string) => ({ issuer: config.issuer, subject });
+async function changeGrant(
+  actor: Identity,
+  actorApp: string,
+  change: { accountId: string; tenantId: string; appCode: string; reason: string },
+  active: boolean,
+  requestId: string,
+) {
+  const current = (
+    await pool.query(
+      'SELECT revision FROM application_grants WHERE account_id=$1 AND tenant_id=$2 AND app_code=$3',
+      [change.accountId, change.tenantId, change.appCode],
+    )
+  ).rows[0];
+  return new GovernanceService(store).saveGrant(
+    {
+      identity: actor,
+      appCode: actorApp,
+      tenantId: change.tenantId,
+      requestId,
+      idempotencyKey: randomUUID(),
+      reason: change.reason,
+    },
+    { accountId: change.accountId, appCode: change.appCode, active },
+    current?.revision ?? 0,
+  );
+}
+const identity = (subject: string) => ({
+  issuer: config.issuer,
+  subject,
+  authenticatedAt: Math.floor(Date.now() / 1000),
+  authenticationMethods: ['pwd', 'otp'],
+});
 before(async () => {
   assert.equal(
     (await pool.query('SELECT purpose FROM environment_marker')).rows[0]?.purpose,
@@ -54,7 +88,7 @@ test('delegated administration rejects cross-tenant and inactive app grants', as
   const admin = identity(ids.admin);
   await assert.rejects(
     () =>
-      store.changeGrant(
+      changeGrant(
         admin,
         'aio-foundation',
         {
@@ -70,7 +104,7 @@ test('delegated administration rejects cross-tenant and inactive app grants', as
   );
   await assert.rejects(
     () =>
-      store.changeGrant(
+      changeGrant(
         admin,
         'aio-foundation',
         {
@@ -82,7 +116,7 @@ test('delegated administration rejects cross-tenant and inactive app grants', as
         true,
         'test',
       ),
-    { code: 'PERMISSION_DENIED' },
+    { code: 'APPLICATION_DELEGATION_DENIED' },
   );
 });
 test('revoking an app grant immediately removes access and app visibility with an audit record', async () => {
@@ -93,7 +127,7 @@ test('revoking an app grant immediately removes access and app visibility with a
     reason: 'Synthetic revocation test',
   };
   try {
-    await store.changeGrant(identity(ids.admin), 'aio-foundation', change, false, 'test-revoke');
+    await changeGrant(identity(ids.admin), 'aio-foundation', change, false, 'test-revoke');
     await assert.rejects(() => store.principal(identity(ids.learner), 'aio-probe'), {
       code: 'APPLICATION_ACCESS_DENIED',
     });
@@ -114,7 +148,7 @@ test('revoking an app grant immediately removes access and app visibility with a
     // The same person's other application remains available.
     await store.principal(identity(ids.learner), 'aio-foundation');
   } finally {
-    await store.changeGrant(identity(ids.admin), 'aio-foundation', change, true, 'test-restore');
+    await changeGrant(identity(ids.admin), 'aio-foundation', change, true, 'test-restore');
   }
 });
 test('person, account and concurrent assignments remain separate', async () => {

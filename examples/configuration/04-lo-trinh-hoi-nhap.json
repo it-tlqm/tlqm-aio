@@ -1,0 +1,30 @@
+{
+  "format": "tlqm-aio-configuration",
+  "version": 1,
+  "kind": "lms-path",
+  "label": "Lộ trình hội nhập TLQM — mẫu thử",
+  "createdAt": "2026-11-10T23:02:14.814Z",
+  "content": {
+    "schemaVersion": 1,
+    "title": "Lộ trình hội nhập TLQM — mẫu thử",
+    "description": "Học nội dung giới thiệu AIO và đạt bài kiểm tra. Giao người học và hạn hoàn thành khi tạo đợt.",
+    "courseVersionIds": [
+      "ffffffff-ffff-4fff-8fff-000000000004"
+    ],
+    "audienceUnits": [
+      "ffffffff-ffff-4fff-8fff-000000000001"
+    ]
+  },
+  "references": [
+    {
+      "type": "unit",
+      "id": "ffffffff-ffff-4fff-8fff-000000000001",
+      "label": "Đơn vị áp dụng mẫu"
+    },
+    {
+      "type": "courseVersion",
+      "id": "ffffffff-ffff-4fff-8fff-000000000004",
+      "label": "Phiên bản khóa hội nhập đã phát hành"
+    }
+  ]
+}

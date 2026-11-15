@@ -1,1 +1,9 @@
 * text=auto eol=lf
+
+# Preserve binary brand and media assets byte-for-byte.
+*.ai binary
+*.pdf binary
+*.png binary
+*.webm binary
+*.woff binary
+*.woff2 binary

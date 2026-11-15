@@ -1,0 +1,77 @@
+{
+  "format": "tlqm-aio-configuration",
+  "version": 1,
+  "kind": "workflow",
+  "label": "Duyệt cập nhật hồ sơ — mẫu TLQM",
+  "createdAt": "2026-11-10T23:02:14.812Z",
+  "content": {
+    "schemaVersion": 1,
+    "name": "Duyệt cập nhật hồ sơ — mẫu TLQM",
+    "description": "HR gửi đề xuất, người độc lập phê duyệt; HR kiểm tra lại và xác nhận áp dụng hồ sơ.",
+    "category": "Nhân sự",
+    "input": {
+      "schemaVersion": 1,
+      "title": "Quy trình mới",
+      "sections": [
+        {
+          "id": "request",
+          "title": "Thông tin đề nghị",
+          "fields": [
+            {
+              "id": "purpose",
+              "type": "longText",
+              "label": "Nội dung đề nghị",
+              "required": true,
+              "minLength": 0,
+              "maxLength": 4000
+            },
+            {
+              "id": "requested_on",
+              "type": "date",
+              "label": "Ngày đề nghị",
+              "required": true
+            }
+          ]
+        }
+      ]
+    },
+    "audienceUnits": [
+      "ffffffff-ffff-4fff-8fff-000000000001"
+    ],
+    "nodes": [
+      {
+        "id": "start",
+        "label": "HR gửi đề xuất",
+        "kind": "start",
+        "next": "review"
+      },
+      {
+        "id": "review",
+        "label": "Phê duyệt thay đổi",
+        "kind": "approval",
+        "assignee": "ffffffff-ffff-4fff-8fff-000000000002",
+        "dueHours": 24,
+        "next": "end",
+        "form": null
+      },
+      {
+        "id": "end",
+        "label": "Sẵn sàng HR áp dụng",
+        "kind": "end"
+      }
+    ],
+    "positions": {}
+  },
+  "references": [
+    {
+      "type": "unit",
+      "id": "ffffffff-ffff-4fff-8fff-000000000001",
+      "label": "Đơn vị áp dụng mẫu"
+    },
+    {
+      "type": "account",
+      "id": "ffffffff-ffff-4fff-8fff-000000000002",
+      "label": "Người phê duyệt độc lập"
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "format": "tlqm-aio-configuration",
+  "version": 1,
+  "kind": "directory-people",
+  "label": "Hồ sơ hội nhập TLQM — mẫu",
+  "createdAt": "2026-11-10T23:02:14.811Z",
+  "content": {
+    "schema": {
+      "schemaVersion": 1,
+      "title": "Hồ sơ hội nhập TLQM — mẫu",
+      "sections": [
+        {
+          "id": "suite_profile",
+          "title": "Thông tin hội nhập",
+          "fields": [
+            {
+              "id": "suite_work_location",
+              "type": "shortText",
+              "label": "Địa điểm làm việc đề xuất",
+              "required": false,
+              "minLength": 0,
+              "maxLength": 200
+            },
+            {
+              "id": "suite_skills",
+              "type": "multipleChoice",
+              "label": "Kỹ năng đã được hướng dẫn",
+              "required": false,
+              "options": [
+                {
+                  "id": "safety",
+                  "label": "An toàn"
+                },
+                {
+                  "id": "digital",
+                  "label": "Ứng dụng số"
+                },
+                {
+                  "id": "teamwork",
+                  "label": "Phối hợp công việc"
+                }
+              ]
+            },
+            {
+              "id": "suite_note",
+              "type": "longText",
+              "label": "Ghi chú của nhân viên",
+              "required": false,
+              "minLength": 0,
+              "maxLength": 2000
+            },
+            {
+              "id": "suite_hr_note",
+              "type": "longText",
+              "label": "Ghi chú nội bộ HR",
+              "required": false,
+              "minLength": 0,
+              "maxLength": 2000
+            }
+          ]
+        }
+      ]
+    },
+    "selfView": [
+      "suite_work_location",
+      "suite_skills",
+      "suite_note"
+    ],
+    "selfEdit": [
+      "suite_work_location",
+      "suite_skills",
+      "suite_note"
+    ]
+  },
+  "references": []
+}

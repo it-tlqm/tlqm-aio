@@ -1,6 +1,6 @@
 # Lộ trình triển khai
 
-Ngày: 09/11/2026. Trạng thái: **đã khởi động giai đoạn 1 tại local**, chưa ấn định lịch production hoặc nguồn lực toàn chương trình.
+Ngày: 10/11/2026. Trạng thái: **Foundation/Forms/LMS sandbox đã nghiệm thu local; module Quy trình theo yêu cầu mới đã có bản đầu chạy được**. Chưa ấn định lịch production hoặc nguồn lực toàn chương trình. [Tiến độ Quy trình](WORKFLOWS_PROGRESS.md).
 
 Thứ tự người dùng đã chốt: **SSO và nền tảng chung → Form Builder + tích hợp LMS → các ứng dụng khác; LIMS để sau**.
 
