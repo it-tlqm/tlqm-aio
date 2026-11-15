@@ -37,3 +37,4 @@ CREATE TABLE unit_leaders (
     (org_unit_id WITH =,tstzrange(valid_from,valid_until,'[)') WITH &&) WHERE(active)
 );
 CREATE INDEX unit_leaders_tenant ON unit_leaders(tenant_id,id);
+
